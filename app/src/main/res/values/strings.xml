@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">PinjamBuku</string>
+
+    <string name="user_name">email*</string>
+    <string name="signup_name">name</string>
+    <string name="signup_fullname">fullname</string>
+    <string name="signup_username">username</string>
+    <string name="user_password">password*</string>
+    <string name="confirm_password">confirm password*</string>
+    <string name="email_example">you@abc.com</string>
+    <string name="login_button">Login</string>
+    <string name="signup_button">Create Your Account</string>
+    <string name="signup_fullname_title">Full Name : *</string>
+    <string name="signup_username_title">Username :*</string>
+    <string name="signup_email_title">Email : *</string>
+    <string name="signup_password">Password : *</string>
+    <string name="signup_user_password">password</string>
+    <string name="signup_confirm__password">Confirm Password : *</string>
+    <string name="signup_password_placeholder">6 character or more</string>
+    <string name="signup_city">City :*</string>
+    <string name="signup_city_placeholder">Jakarta, Bandung, ..</string>
+</resources>

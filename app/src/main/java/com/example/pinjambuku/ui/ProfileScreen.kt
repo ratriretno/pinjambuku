@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.pinjambuku.R
 import com.example.pinjambuku.ui.theme.PinjamBukuTheme
 
@@ -51,7 +52,7 @@ import com.example.pinjambuku.ui.theme.PinjamBukuTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Profile(){
+fun Profile(navController: NavController){
 
     Scaffold (
         topBar = {
@@ -65,7 +66,7 @@ fun Profile(){
                 }
             },
                 navigationIcon = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = {navController.popBackStack()}) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back Button")
                     }
                 },
@@ -173,7 +174,7 @@ fun Profile(){
 
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun ProfilePreview(){
@@ -183,3 +184,5 @@ fun ProfilePreview(){
 
     }
 }
+
+ */

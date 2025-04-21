@@ -379,6 +379,7 @@ fun SignUp(){
 
 }
 
+/*
 @Composable
 fun Banner(modifier: Modifier = Modifier){
     Box(){
@@ -386,6 +387,8 @@ fun Banner(modifier: Modifier = Modifier){
     }
 
 }
+
+ */
 
 
 

@@ -1,5 +1,6 @@
 package com.example.pinjambuku
 
+import android.app.Application
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -13,7 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.pinjambuku.ui.Banner
+import com.example.pinjambuku.ui.DetailScreen
+import com.example.pinjambuku.ui.HomeScreen
 import com.example.pinjambuku.ui.LoginScreen
 import com.example.pinjambuku.ui.Profile
 import com.example.pinjambuku.ui.SignUp
@@ -26,9 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PinjamBukuTheme {
 
-                //LoginScreen()
-                SignUp()
-                //Profile()
+                PinjamBukuApp()
 
             }
         }
@@ -37,21 +39,3 @@ class MainActivity : ComponentActivity() {
 
 
 
-/*
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PinjamBukuTheme {
-        Greeting("Android")
-    }
-}
-
- */

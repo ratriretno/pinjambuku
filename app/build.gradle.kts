@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -28,11 +30,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -40,6 +42,21 @@ android {
 }
 
 dependencies {
+
+    implementation(libs.androidx.lifecycle.viewmodel.compose.v270)
+    implementation(libs.androidx.navigation.compose.v277)
+
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.runtime.livedata)
+    ksp(libs.androidx.room.compiler.v261)
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.room.compiler)
 
     implementation(libs.material3)
     implementation(libs.androidx.material.icons.extended)

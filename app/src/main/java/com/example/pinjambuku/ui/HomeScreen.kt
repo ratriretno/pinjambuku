@@ -475,7 +475,14 @@ fun BottomBar(
                         if(item.screen.route==profileScreen.route){
                             Log.i("item", item.screen.route)
                             Log.i("item", profileScreen.route)
-                            goToLogin()
+                            Log.i("login bottom check", login.toString())
+                            if (login){
+                                //todo
+                                goToProfile()
+                            } else {
+                                goToLogin()
+                            }
+
                         } else{
                             navController.navigate(item.screen.route) {
                                 // Pop up ke the start destination

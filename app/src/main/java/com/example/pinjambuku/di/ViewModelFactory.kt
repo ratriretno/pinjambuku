@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.pinjambuku.BookViewModel
 import com.example.pinjambuku.repository.BookRepository
 import com.example.pinjambuku.ui.screen.HomeViewModel
+import com.example.pinjambuku.ui.screen.LoginViewModel
 
 
 class ViewModelFactory private constructor(private val repository: BookRepository) :
@@ -18,6 +19,8 @@ class ViewModelFactory private constructor(private val repository: BookRepositor
             return HomeViewModel(repository) as T
         }  else if (modelClass.isAssignableFrom(BookViewModel::class.java)) {
             return BookViewModel(repository) as T}
+        else if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
+            return LoginViewModel(repository) as T}
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
 

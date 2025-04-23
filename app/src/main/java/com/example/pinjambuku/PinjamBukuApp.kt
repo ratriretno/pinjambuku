@@ -132,10 +132,10 @@ fun PinjamBukuApp(
                     navArgument(USER_ID_ARG) { type = NavType.StringType }
                 )
             ) {
-                val idUser = navController.previousBackStackEntry?.savedStateHandle?.get<String>("idUser")
-                if (idUser!= null) {
+//                val id = navController.previousBackStackEntry?.savedStateHandle?.get<String>("idUser")
+
                     ProfileScreen(navigateBack = { navController.popBackStack() }, idUser = idUser)
-                }
+
 
             }
 

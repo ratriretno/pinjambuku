@@ -1,5 +1,6 @@
 package com.example.pinjambuku.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.example.pinjambuku.data.SettingPreferences
@@ -9,6 +10,8 @@ import com.example.pinjambuku.database.FavoriteBookDao
 import com.example.pinjambuku.database.FavoriteBookEntity
 import com.example.pinjambuku.model.BookModel
 import com.example.pinjambuku.network.ApiService
+import com.example.pinjambuku.network.LoginItem
+import com.example.pinjambuku.network.LoginResponse
 import com.example.pinjambuku.utils.AppExecutors
 import com.example.pinjambuku.network.ResultNetwork
 
@@ -47,6 +50,21 @@ class BookRepository(
         }
 
         return result
+    }
+
+    suspend fun login(login : LoginItem): ResultNetwork<LoginResponse> {
+        var resultLogin: ResultNetwork<LoginResponse> = ResultNetwork.Loading
+        try {
+//            val response = apiService.getNews(BuildConfig.API_KEY)
+            val response = apiService.login(login.email, login.password)
+            resultLogin = ResultNetwork.Success(response)
+            Log.i("login", response.toString())
+        } catch (e: Exception) {
+            resultLogin = ResultNetwork.Error(e.message.toString())
+            Log.i("login", e.message.toString())
+        }
+
+        return resultLogin
     }
 
     suspend fun insert(exampleBorrowedBookEntity: ExampleBorrowedBookEntity) =

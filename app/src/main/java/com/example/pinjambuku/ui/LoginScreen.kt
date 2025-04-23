@@ -52,35 +52,98 @@ import androidx.lint.kotlin.metadata.Visibility
 import com.example.pinjambuku.R
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pinjambuku.di.ViewModelFactory
+import com.example.pinjambuku.network.Constant.dataStore
+import com.example.pinjambuku.network.LoginItem
+import com.example.pinjambuku.network.ResultNetwork
+import com.example.pinjambuku.ui.screen.HomeViewModel
+import com.example.pinjambuku.ui.screen.LoginViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navigateBack: () -> Unit){
+fun LoginScreen(
+    navigateBack: () -> Unit,
+    viewModel: LoginViewModel = viewModel(factory = LocalContext.current.let {
+        ViewModelFactory.getInstance(
+            LocalContext.current,
+            it.dataStore
+        )
+    }),
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+) {
 
     val context = LocalContext.current // <-- Get context for Toast
-    var newTextValue by remember{mutableStateOf("")}
+    var newTextValue by remember { mutableStateOf("") }
     var passwordValue by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
-    val isEmailValid = isValidEmail(newTextValue)                      //to check valid email format
+    val isEmailValid = isValidEmail(newTextValue)
+
+    val isLoading by viewModel.isLoading.collectAsState()//to check valid email format
 
     Log.i("screen", "login")
 
-    Scaffold (
-        topBar = {
-            TopAppBar(title = {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    //.padding(5.dp)
-                    ,
-                    contentAlignment = Alignment.Center){
-                    //Text(text = "Sign Up",)
+    viewModel.result.observe(lifecycleOwner) { result ->
+        if (result != null) {
+            when (result) {
+                is ResultNetwork.Loading -> {
+                    viewModel.setLoading(true)
+                    Log.i("login update?", isLoading.toString())
+
                 }
-            },
+
+                is ResultNetwork.Success -> {
+                    viewModel.setLoading(false)
+
+                    Log.i("login update?", isLoading.toString())
+                    Log.i("login update?", result.data.toString())
+                    Toast.makeText(
+                        context,
+                        result.data.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    viewModel.setLoginSetting(result.data)
+                }
+
+                is ResultNetwork.Error -> {
+                    viewModel.setLoading(false)
+//                    binding.progressBar2.visibility = View.GONE
+                    Toast.makeText(
+                        context,
+                        "Terjadi kesalahan" + result.error,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                        //.padding(5.dp)
+                        ,
+                        contentAlignment = Alignment.Center
+                    ) {
+                        //Text(text = "Sign Up",)
+                    }
+                },
                 navigationIcon = {
-                    IconButton(onClick = { }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back Button")
+                    IconButton(onClick =  navigateBack) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back Button"
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -93,113 +156,154 @@ fun LoginScreen(navigateBack: () -> Unit){
 
         },
 
-        ){innerPadding ->
+        ) { innerPadding ->
 
 
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-            .imePadding()
-        ){
-
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .padding(10.dp)
-                .background(colorResource(id = R.color.orange),shape = RoundedCornerShape(20.dp)),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .imePadding()
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .padding(10.dp)
+                    .background(
+                        colorResource(id = R.color.orange),
+                        shape = RoundedCornerShape(20.dp)
+                    ),
                 //.padding(innerPadding),
 
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 //Banner()
 
                 Text(text = "Login", fontSize = 30.sp, fontWeight = FontWeight.Bold)
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
+            if (isLoading){
+                BigCircularLoadingLogin()
+            } else{
+
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
                     //.padding(innerPadding),
-                contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center
 
-            ){
+                ) {
 
 
-
-                Column (
-                    verticalArrangement = Arrangement.spacedBy(15.dp)
-                ){
-                    OutlinedTextField(value = newTextValue, onValueChange = {newTextValue = it}, label = { Text(
-                        stringResource(R.string.user_name),fontSize = 15.sp, fontStyle = FontStyle.Italic)},
-                        isError = newTextValue.isNotBlank() && !isEmailValid,
-                        singleLine = true,
-                        placeholder = { Text(text = stringResource(R.string.email_example))} ,
-                        modifier = Modifier.width(250.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = colorResource(id = R.color.white),    // background when focused
-                            unfocusedContainerColor = colorResource(id = R.color.white)     // background when not focused
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(15.dp)
+                    ) {
+                        OutlinedTextField(value = newTextValue,
+                            onValueChange = { newTextValue = it },
+                            label = {
+                                Text(
+                                    stringResource(R.string.user_name),
+                                    fontSize = 15.sp,
+                                    fontStyle = FontStyle.Italic
+                                )
+                            },
+                            isError = newTextValue.isNotBlank() && !isEmailValid,
+                            singleLine = true,
+                            placeholder = { Text(text = stringResource(R.string.email_example)) },
+                            modifier = Modifier.width(250.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedContainerColor = colorResource(id = R.color.white),    // background when focused
+                                unfocusedContainerColor = colorResource(id = R.color.white)     // background when not focused
+                            )
                         )
-                    )
 
-                    if (newTextValue.isNotBlank() && !isEmailValid) {       //warning for invalid email address
-                        Text(
-                            text = "Invalid email format",
-                            color = Color.Red,
-                            fontSize = 12.sp,
+                        if (newTextValue.isNotBlank() && !isEmailValid) {       //warning for invalid email address
+                            Text(
+                                text = "Invalid email format",
+                                color = Color.Red,
+                                fontSize = 12.sp,
+                                modifier = Modifier
+                                    .padding(start = 4.dp)
+                                    .align(Alignment.Start)
+                            )
+                        }
+
+                        OutlinedTextField(value = passwordValue,
+                            onValueChange = { passwordValue = it },
+                            label = {
+                                Text(
+                                    stringResource(R.string.user_password),
+                                    fontSize = 15.sp,
+                                    fontStyle = FontStyle.Italic
+                                )
+                            },
+                            singleLine = true,
+                            //visualTransformation = PasswordVisualTransformation() ,
+                            visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                            trailingIcon = {
+                                val icon = if (isPasswordVisible)
+                                    Icons.Default.Visibility
+                                else
+                                    Icons.Default.VisibilityOff
+
+                                IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                                    Icon(
+                                        imageVector = icon,
+                                        contentDescription = if (isPasswordVisible) "Hide password" else "Show password"
+                                    )
+                                }
+                            },
+                            modifier = Modifier.width(250.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedContainerColor = colorResource(id = R.color.white),    // background when focused
+                                unfocusedContainerColor = colorResource(id = R.color.white)     // background when not focused))
+                            )
+                        )
+
+                        Button(
+                            onClick = {
+                                when {
+                                    newTextValue.isBlank() || passwordValue.isBlank() -> {
+                                        Toast.makeText(
+                                            context,
+                                            "Email and Password must not be empty",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+
+                                    !isValidEmail(newTextValue) -> {
+                                        Toast.makeText(
+                                            context,
+                                            "Please enter a valid email address",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+
+                                    else -> {
+
+                                            viewModel.login(LoginItem(email = newTextValue, password = passwordValue))
+                                        // Proceed with login logic
+                                    }
+                                }
+                            },
+
+
                             modifier = Modifier
-                                .padding(start = 4.dp)
-                                .align(Alignment.Start)
+                                .width(250.dp),
+                            //.height(48.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.hijau_muda))
                         )
+                        { Text(stringResource(R.string.login_button), fontSize = 18.sp) }
+
                     }
 
-                    OutlinedTextField(value = passwordValue, onValueChange = {passwordValue = it}, label = { Text(
-                        stringResource(R.string.user_password),fontSize = 15.sp, fontStyle = FontStyle.Italic)}, singleLine = true,
-                        //visualTransformation = PasswordVisualTransformation() ,
-                        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        trailingIcon = {
-                            val icon = if (isPasswordVisible)
-                                Icons.Default.Visibility
-                            else
-                                Icons.Default.VisibilityOff
-
-                            IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                                Icon(imageVector = icon, contentDescription = if (isPasswordVisible) "Hide password" else "Show password")
-                            }
-                        },
-                        modifier = Modifier.width(250.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = colorResource(id = R.color.white),    // background when focused
-                            unfocusedContainerColor = colorResource(id = R.color.white)     // background when not focused))
-                        )
-                    )
-
-                    Button(onClick = {
-                        when {
-                            newTextValue.isBlank() || passwordValue.isBlank() -> {
-                                Toast.makeText(context, "Email and Password must not be empty", Toast.LENGTH_SHORT).show()
-                            }
-                            !isValidEmail(newTextValue) -> {
-                                Toast.makeText(context, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
-                            }
-                            else -> {
-                                // Proceed with login logic
-                            }
-                        }
-                    },
-
-
-                        modifier = Modifier
-                            .width(250.dp),
-                        //.height(48.dp),
-                        colors= ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.hijau_muda) )
-                    )
-                    { Text(stringResource(R.string.login_button),fontSize = 18.sp) }
-
                 }
-
             }
+
 
         }
 
@@ -209,6 +313,21 @@ fun LoginScreen(navigateBack: () -> Unit){
 
 fun isValidEmail(email: String): Boolean {
     return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+}
+
+@Composable
+fun BigCircularLoadingLogin() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.width(64.dp),
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
+    }
 }
 
 

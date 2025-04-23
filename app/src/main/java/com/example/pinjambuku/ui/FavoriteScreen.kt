@@ -1,6 +1,5 @@
 package com.example.pinjambuku.ui
 
-import android.app.Application
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,8 +14,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,37 +36,29 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.example.pinjambuku.BookViewModel
-import com.example.pinjambuku.model.ExampleBook
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
+import com.example.pinjambuku.BookViewModel
 import com.example.pinjambuku.R
-import com.example.pinjambuku.ui.theme.PinjamBukuTheme
-
+import com.example.pinjambuku.model.ExampleBook
+import com.example.pinjambuku.model.FavoriteBook
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BorrowedBookScreen(
+fun FavoriteScreen(
     viewModel: BookViewModel,
     navController: NavHostController
 ){
-    val borrowedBook by viewModel.borrowedBook.observeAsState(emptyList())
 
-    if (borrowedBook.isEmpty()) {
+    val favoriteBook by viewModel.favoriteBook.observeAsState(emptyList())
+
+    if (favoriteBook.isEmpty()) {
 /*
         Box(
             modifier = Modifier
@@ -73,7 +70,7 @@ fun BorrowedBookScreen(
             Scaffold (
                 topBar = {
                     CenterAlignedTopAppBar(
-                        title = { Text(text = "Buku Yang Dipinjam") },
+                        title = { Text(text = "Buku Favorite") },
                         navigationIcon = {
                             IconButton(onClick = { navController.popBackStack() }) {
                                 Row (verticalAlignment = Alignment.CenterVertically){
@@ -103,29 +100,28 @@ fun BorrowedBookScreen(
                 )
                 {
                     Text(
-                        text = "Tidak ada buku yang dipinjam",
+                        text = "No favorite books found",
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center
                     )
                 }
             }
 
-       // }
+//        }
     } else {
-        // Show borrowed list
-        BorrowedBookList(
-            books = borrowedBook,
+        // Show favorite list
+        FavoriteList(
+            books = favoriteBook,
             navController = navController,
             viewModel = viewModel
         )
     }
 
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BorrowedBookList(                               //bertugas mengambil data Room database yang sudah dibaca oleh borrowedBook: LiveData<List<ExampleBook>> = repository.getAllBorrowedBook().map (di ViewModel)
+fun FavoriteList(                               //bertugas mengambil data Room database yang sudah dibaca oleh val favoriteBook: LiveData<List<ExampleBook>> = repository.getAllFavoriteBook().map (di ViewModel)
     books: List<ExampleBook>,
     navController: NavHostController,
     viewModel: BookViewModel,
@@ -135,7 +131,7 @@ fun BorrowedBookList(                               //bertugas mengambil data Ro
     Scaffold (
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = "Buku Yang Dipinjam") },
+                title = { Text(text = "Buku Favorite") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Row (verticalAlignment = Alignment.CenterVertically){
@@ -164,7 +160,7 @@ fun BorrowedBookList(                               //bertugas mengambil data Ro
                 .padding(innerPadding)
         ) {
             items(books, key = { it.idBuku }) { book ->
-                BorrowBookListItem(
+                FavoriteListItem(
                     image = book.image,
                     title = book.judul,
                     year = book.tahun,
@@ -175,6 +171,7 @@ fun BorrowedBookList(                               //bertugas mengambil data Ro
                         navController.navigate("detail")        // Navigate to detail screen
                     },
                     modifier = Modifier.fillMaxWidth()
+
                 )
             }
         }
@@ -183,9 +180,8 @@ fun BorrowedBookList(                               //bertugas mengambil data Ro
 
 }
 
-
 @Composable
-fun BorrowBookListItem(
+fun FavoriteListItem(
     image: Int,
     title: String,
     year: String,
@@ -202,7 +198,6 @@ fun BorrowBookListItem(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(10.dp)
     ){
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -263,38 +258,26 @@ fun BorrowBookListItem(
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = "Borrowed Icon",
-                    tint = Color.Red,
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = "Favorite Icon",
+                    tint = Color(0xFFF540B2),
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
+                /*
                 Text(
                     text = "Dipinjam",
                     color = Color.Red,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
+
+                 */
             }
-
-
 
         }
 
 
-
-
     }
 
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun BorrowBookScreenPreview(){
-    PinjamBukuTheme {
-        BorrowBookScreen(viewModel = BookViewModel(application = Application()) , navController = rememberNavController())
-    }
-}
-
- */

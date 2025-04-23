@@ -18,6 +18,7 @@ import com.example.pinjambuku.ui.navigation.Screen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.pinjambuku.ui.BorrowedBookScreen
+import com.example.pinjambuku.ui.FavoriteScreen
 
 
 @Composable
@@ -54,12 +55,12 @@ fun PinjamBukuApp(
             composable(Screen.Home.route){
                 HomeScreen(viewModel = viewModel, navController= navController)
             }
-/*
+
             composable(Screen.Favorite.route) {
                 FavoriteScreen(viewModel = viewModel, navController = navController)
 
             }
-*/
+
             composable(Screen.BorrowedBook.route) {
                 BorrowedBookScreen(viewModel = viewModel, navController = navController)
             }

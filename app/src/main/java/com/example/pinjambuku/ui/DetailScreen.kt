@@ -78,22 +78,29 @@ fun DetailScreen(
     val context = LocalContext.current
 
 
+
+
+
+
     //val movie = viewModel.selectedMovie
     val book = viewModel.selectedBook
 
-    //if (movie != null){
+    if (book != null){
 
 
         //var isFavorite by remember { mutableStateOf(false) }
 
-        //val isFavorite by viewModel.isFavorite          // Observe favorite state
+        val isFavorite by viewModel.isFavorite          // Observe favorite state
 
         //LaunchedEffect(movie?.id) {
         //    movie?.id?.let { viewModel.checkIfFavorite(it.toString()) }
         //}
 
         LaunchedEffect(book?.idBuku) {
-            book?.idBuku?.let { viewModel.checkIfBorrowed(it.toString()) }
+            book?.idBuku?.let {
+                viewModel.checkIfBorrowed(it.toString())
+                viewModel.checkIfFavorite(it.toString())
+            }
         }
 
         Scaffold(
@@ -207,13 +214,7 @@ fun DetailScreen(
                         }
 
  */
-                        /*                    item {
-                                                Text(text = "Producer: ")
-                                                Text(text = "${movie?.producer}")
-                                                Spacer(modifier = Modifier.height(8.dp))
-                                            }
 
-                         */
                         item {
                             Text(text = "Deskripsi Buku",style = MaterialTheme.typography.bodyLarge )
                             Spacer(modifier = Modifier.height(8.dp))
@@ -222,7 +223,21 @@ fun DetailScreen(
                         }
 
 
-
+                    }
+                    FloatingActionButton(
+                        onClick = {
+                            viewModel.toggleFavorite()
+                        },
+                        containerColor = Color(0xFFFFFFFF),
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 16.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = if (isFavorite) "Unfavorite" else "Favorite",
+                            tint = Color(0xFFF540B2)
+                        )
                     }
 
 
@@ -234,9 +249,9 @@ fun DetailScreen(
 
         }
 
-    //}else{
-    //    Text("Movie not found")
-    //}
+    }else{
+        Text("Book not found")
+    }
 
 }
 

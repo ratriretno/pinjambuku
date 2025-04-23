@@ -25,6 +25,7 @@
     <string name="menu_profile">Profile</string>
     <string name="menu_borrowedbook">Buku Yang Dipinjam</string>
     <string name="back">Back</string>
+    <string name="daftar_peminjaman">Daftar Peminjaman</string>
 
 
 </resources>

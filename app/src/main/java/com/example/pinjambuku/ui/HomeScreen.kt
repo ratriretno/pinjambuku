@@ -320,9 +320,13 @@ fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier) {
             ),
 
  */
-            BottomBarItem(title = stringResource(R.string.menu_borrowedbook),
+            BottomBarItem(title = stringResource(R.string.daftar_peminjaman),
                 icon = Icons.Default.Book,
                 screen = Screen.BorrowedBook
+            ),
+            BottomBarItem(title = stringResource(R.string.menu_favorite),
+                icon = Icons.Default.Favorite,
+                screen = Screen.Favorite
             ),
             BottomBarItem(title = stringResource(R.string.menu_profile),
                 icon = Icons.Default.AccountCircle,

@@ -9,8 +9,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.pinjambuku.database.ExampleBorrowedBookEntity
+import com.example.pinjambuku.database.FavoriteBookEntity
 import com.example.pinjambuku.model.ExampleBook
 import com.example.pinjambuku.model.ExampleBookData
+import com.example.pinjambuku.model.FavoriteBook
 import com.example.pinjambuku.repository.BookRepository
 import kotlinx.coroutines.launch
 
@@ -22,25 +24,29 @@ class BookViewModel (application: Application): AndroidViewModel(application){
     var isBorrowed = mutableStateOf(false)
         private set
 
-/*
-//    val favoriteMovies: LiveData<List<Movie>> = repository.getAllFavoriteMovie()
+    
+
+    //val favoriteBook: LiveData<List<ExampleBook>> = repository.getAllFavoriteBook()
 
     //favoriteMovies di bawah ini bertugas membaca data dari Room database
-    val favoriteMovies: LiveData<List<Movie>> = repository.getAllFavoriteMovie().map { entities ->
+    val favoriteBook: LiveData<List<ExampleBook>> = repository.getAllFavoriteBook().map { entities ->
         entities.map { entity ->
-            Movie(
-                id = entity.id.toInt(),
-                title = entity.title ?: "",
-                year = entity.year ?: "",
-                director = entity.director ?: "",
-                producer = entity.producer ?: "",
-                synopsis = entity.synopsis ?: "",
-                image = entity.image ?: R.drawable.placeholder
+            ExampleBook(
+                idBuku = entity.idBuku.toInt(),
+                judul = entity.judul ?: "",
+                penulis = entity.penulis ?: "",
+                penerbit = entity.penerbit ?: "",
+                tahun = entity.tahun ?: "",
+                isbn = entity.isbn ?: "",
+                kategori = entity.kategori ?: "",
+                pemilik = entity.pemilik ?: "",
+                image = entity.image ?: R.drawable.placeholder,
+                deskripsi = entity.deskripsi ?: ""
             )
         }
     }
 
- */
+
 
     //borrowedBook di bawah ini bertugas membaca data dari Room database
     val borrowedBook: LiveData<List<ExampleBook>> = repository.getAllBorrowedBook().map { entities ->
@@ -81,22 +87,22 @@ class BookViewModel (application: Application): AndroidViewModel(application){
 //    private val _movies = MoviesData.movies                 // membaca semua object di "MoviesData"
     private  val _book = ExampleBookData.books              // membaca semua object di "ExampleBookData"
 
-/*
+
     // Favorite state (default false)
     var isFavorite = mutableStateOf(false)
         private set
-*/
 
 
 
-/*
-    // Cek favorite state jika suatu movie dipilih
-    fun checkIfFavorite(movieId: String) {
+
+
+    // Cek status favorite  jika suatu buku dipilih (dipinjam)
+    fun checkIfFavorite(idBook: String) {
         viewModelScope.launch {
-            isFavorite.value = repository.isFavorite(movieId)
+            isFavorite.value = repository.isFavorite(idBook)
         }
     }
-*/
+
 
     // cek status borrowed jika suatu buku dipilih(dipinjam)
     fun checkIfBorrowed(idBook: String) {
@@ -105,35 +111,38 @@ class BookViewModel (application: Application): AndroidViewModel(application){
         }
     }
 
-/*
+
     // Untuk toggle favorite state
     fun toggleFavorite() {
         //isFavorite.value = !isFavorite.value
 
-        selectedMovie?.let { movie ->
-            val movieEntity = MovieEntity(
-                id = movie.id.toString(),
-                title = movie.title,
-                year = movie.year,
-                director = movie.director,
-                producer = movie.producer,
-                synopsis = movie.synopsis,
-                image = movie.image
+        selectedBook?.let { book ->
+            val favoriteBookEntity = FavoriteBookEntity(
+                idBuku = book.idBuku.toString(),
+                judul = book.judul,
+                penulis = book.penulis,
+                penerbit = book.penerbit,
+                tahun = book.tahun,
+                isbn = book.isbn,
+                kategori = book.kategori,
+                pemilik = book.pemilik,
+                image = book.image,
+                deskripsi = book.deskripsi
             )
 
             viewModelScope.launch {
                 if (isFavorite.value) {
-                    repository.delete(movieEntity)
+                    repository.delete(favoriteBookEntity)
                     isFavorite.value = false
                 } else {
-                    repository.insert(movieEntity)     // insert data to Room database
+                    repository.insert(favoriteBookEntity)     // insert data to Room database
                     isFavorite.value = true
                 }
             }
         }
 
     }
-*/
+
 
     // Untuk toggle borrowed state
     fun toggleBorrowed(){
@@ -167,13 +176,13 @@ class BookViewModel (application: Application): AndroidViewModel(application){
     }
 
 
-/*
+
     // Set favorite state based on database
     fun setFavorite(value: Boolean) {
         isFavorite.value = value
     }
 
- */
+
 
     // Set borrowed book state based on database
     fun setBorrowed(value: Boolean){

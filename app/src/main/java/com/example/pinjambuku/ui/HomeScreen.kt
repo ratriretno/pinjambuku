@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Book
@@ -50,17 +51,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pinjambuku.BookViewModel
 import com.example.pinjambuku.R
 import com.example.pinjambuku.model.BottomBarItem
-import com.example.pinjambuku.model.ExampleBook
 import com.example.pinjambuku.ui.navigation.Screen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 import androidx.compose.ui.draw.alpha
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -92,12 +93,15 @@ fun HomeScreen(
 
     val books = viewModel.bookList.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsState()
+    val query by viewModel.query.collectAsState()
 
     viewModel.result.observe(lifecycleOwner) { result ->
         if (result != null) {
             when (result) {
                 is ResultNetwork.Loading -> {
                     viewModel.setLoading(true)
+                    Log.i("loading update?", isLoading.toString())
+
                 }
 
                 is ResultNetwork.Success -> {
@@ -121,14 +125,16 @@ fun HomeScreen(
         }
     }
 
-    ScrollItemHome(books, isLoading)
-
-
-
+    ScrollItemHome(books, isLoading, query, viewModel)
 }
 
 @Composable
-fun ScrollItemHome(books: State<List<BookModel>>, isLoading: Boolean){
+fun ScrollItemHome(
+    books: State<List<BookModel>>,
+    isLoading: Boolean,
+    query: String,
+    viewModel: HomeViewModel
+){
     //    val borrowedIds by viewModel.borrowedBookIds.observeAsState(emptySet())             // utk clickable or frozen item di homescreen
     //Scaffold() {innerPadding ->
     Column(
@@ -139,7 +145,8 @@ fun ScrollItemHome(books: State<List<BookModel>>, isLoading: Boolean){
     ) {
         Banner()
 
-        SearchBar()
+//        SearchBar()
+        DecoratedTextField(query, viewModel)
 
         //c
 //        SearchBar(
@@ -338,6 +345,7 @@ fun SearchBar(
 //    query: String,
 //    onQueryChanged: (String) -> Unit
 ) {
+
     TextField(
         value = "",
         onValueChange = {},
@@ -354,6 +362,51 @@ fun SearchBar(
         )
     )
 }
+
+@Composable
+fun DecoratedTextField(query: String, viewModel: HomeViewModel) {
+
+    BasicTextField(
+        value = query,
+        onValueChange = { viewModel.setQuery(it)},
+        decorationBox = { innerTextField ->
+            Row(
+                Modifier
+                    .padding(horizontal = 16.dp, vertical = 50.dp)
+                    .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if(query.isEmpty()){
+                    Icon(Icons.Default.Search, contentDescription = "Search")
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+                Box(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    if (query.isEmpty()) {
+                        Text(
+                            text = "Cari nama buku atau penulis",
+                            style = TextStyle(color = Color.Gray)
+                        )
+                    }
+                    innerTextField()
+                }
+                if (query.isNotEmpty()) {
+                    IconButton(onClick = { viewModel.search()}) {
+                        Icon(Icons.Default.Search, contentDescription = "Clear text")
+                    }
+                }
+            }
+        },
+        textStyle = TextStyle(
+            color = Color.Black,
+            fontSize = 16.sp
+        )
+    )
+}
+
 
 
 @Composable
@@ -414,6 +467,10 @@ fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier) {
             )
         }
     }
+}
+
+fun search(){
+
 }
 
 //@Preview(showBackground = true)

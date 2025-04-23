@@ -35,6 +35,19 @@ class BookRepository(
         return result
     }
 
+    suspend fun searchBooks(keyword : String): ResultNetwork<List<BookModel>> {
+        result = ResultNetwork.Loading
+        try {
+//            val response = apiService.getNews(BuildConfig.API_KEY)
+            val response = apiService.searchBooks(keyword)
+            result = ResultNetwork.Success(response.listEvents)
+        } catch (e: Exception) {
+            result = ResultNetwork.Error(e.message.toString())
+        }
+
+        return result
+    }
+
     suspend fun insert(exampleBorrowedBookEntity: ExampleBorrowedBookEntity) =
         bookBorrowDao.insert(exampleBorrowedBookEntity)
 

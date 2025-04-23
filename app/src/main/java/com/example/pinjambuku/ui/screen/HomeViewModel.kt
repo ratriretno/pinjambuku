@@ -24,6 +24,9 @@ class HomeViewModel(private val repository: BookRepository) : ViewModel(){
     private val _isLoading = MutableStateFlow(true)
     val isLoading : StateFlow<Boolean> = _isLoading
 
+    private val _query = MutableStateFlow("")
+    val query : StateFlow<String> = _query
+
     companion object {
         private const val TAG = "UpcomingFragmentViewModel"
     }
@@ -45,5 +48,16 @@ class HomeViewModel(private val repository: BookRepository) : ViewModel(){
 
     fun setLoading(loading : Boolean){
         _isLoading.value = loading
+    }
+
+    fun search(){
+        _isLoading.value=true
+        viewModelScope.launch {
+            _result.value = repository.searchBooks(_query.value)
+        }
+    }
+
+    fun setQuery(query : String){
+        _query.value= query
     }
 }

@@ -41,6 +41,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,14 +51,21 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.pinjambuku.R
+import com.example.pinjambuku.di.ViewModelFactory
+import com.example.pinjambuku.network.Constant.dataStore
 import com.example.pinjambuku.ui.theme.PinjamBukuTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BorrowedBookScreen(
-    viewModel: BookViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: BookViewModel = viewModel(factory = LocalContext.current.let {
+        ViewModelFactory.getInstance(
+            LocalContext.current,
+            it.dataStore
+        )
+    })
 ){
     val borrowedBook by viewModel.borrowedBook.observeAsState(emptyList())
 

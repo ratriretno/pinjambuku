@@ -16,7 +16,14 @@ abstract class ExampleBookRoomDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: ExampleBookRoomDatabase? = null
-
+        private var instance: ExampleBookRoomDatabase? = null
+        fun getInstance(context: Context): ExampleBookRoomDatabase =
+            instance ?: synchronized(this) {
+                instance ?: Room.databaseBuilder(
+                    context,
+                    ExampleBookRoomDatabase::class.java, "book_room_database"
+                ).build()
+            }
 
 
         fun getDatabase(context: Context): ExampleBookRoomDatabase {

@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.pinjambuku.database.ExampleBorrowedBookEntity
@@ -16,9 +17,7 @@ import com.example.pinjambuku.model.FavoriteBook
 import com.example.pinjambuku.repository.BookRepository
 import kotlinx.coroutines.launch
 
-class BookViewModel (application: Application): AndroidViewModel(application){
-
-    private val repository = BookRepository(application)
+class BookViewModel (private val repository: BookRepository):  ViewModel(){
 
     // Borrowed book state (default false)
     var isBorrowed = mutableStateOf(false)

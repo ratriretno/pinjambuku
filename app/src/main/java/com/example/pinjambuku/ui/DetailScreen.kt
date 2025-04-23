@@ -58,18 +58,26 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.pinjambuku.BookViewModel
 //import com.example.myghibli.ui.theme.SkyBlue
 import com.example.pinjambuku.R
+import com.example.pinjambuku.di.ViewModelFactory
+import com.example.pinjambuku.network.Constant.dataStore
 import com.example.pinjambuku.ui.theme.PinjamBukuTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-    viewModel: BookViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: BookViewModel = viewModel(factory = LocalContext.current.let {
+        ViewModelFactory.getInstance(
+            LocalContext.current,
+            it.dataStore
+        )
+    })
 ) {        //navController: NavHostController
 
     //var isBorrowed by remember { mutableStateOf(false) }
@@ -255,10 +263,10 @@ fun DetailScreen(
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DetailScreenPreview(){
-    PinjamBukuTheme {
-        DetailScreen(viewModel = BookViewModel(application = Application()), navController = rememberNavController())
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DetailScreenPreview(){
+//    PinjamBukuTheme {
+//        DetailScreen(viewModel = BookViewModel(application = Application()), navController = rememberNavController())
+//    }
+//}

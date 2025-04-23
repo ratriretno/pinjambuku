@@ -36,6 +36,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,17 +44,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.pinjambuku.BookViewModel
 import com.example.pinjambuku.R
+import com.example.pinjambuku.di.ViewModelFactory
 import com.example.pinjambuku.model.ExampleBook
 import com.example.pinjambuku.model.FavoriteBook
+import com.example.pinjambuku.network.Constant.dataStore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteScreen(
-    viewModel: BookViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: BookViewModel = viewModel(factory = LocalContext.current.let {
+        ViewModelFactory.getInstance(
+            LocalContext.current,
+            it.dataStore
+        )
+    })
 ){
 
     val favoriteBook by viewModel.favoriteBook.observeAsState(emptyList())

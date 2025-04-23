@@ -24,7 +24,6 @@ import com.example.pinjambuku.ui.FavoriteScreen
 @Composable
 fun PinjamBukuApp(
     modifier: Modifier = Modifier,
-    viewModel: BookViewModel = viewModel(),
     navController: NavHostController = rememberNavController(),
 ){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -53,22 +52,22 @@ fun PinjamBukuApp(
             modifier=Modifier.padding(paddingValues)
         ){
             composable(Screen.Home.route){
-                HomeScreen(viewModel = viewModel, navController= navController)
+                HomeScreen( navController= navController)
             }
 
             composable(Screen.Favorite.route) {
-                FavoriteScreen(viewModel = viewModel, navController = navController)
+                FavoriteScreen( navController = navController)
 
             }
 
             composable(Screen.BorrowedBook.route) {
-                BorrowedBookScreen(viewModel = viewModel, navController = navController)
+                BorrowedBookScreen( navController = navController)
             }
             composable(Screen.Profile.route) {
                 Profile(navController = navController)
             }
             composable(Screen.Detail.route) {
-                DetailScreen(viewModel = viewModel, navController = navController)
+                DetailScreen(navController = navController)
             }
 
         }

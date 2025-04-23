@@ -65,15 +65,23 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.draw.alpha
 import androidx.lifecycle.LiveData
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pinjambuku.di.ViewModelFactory
+import com.example.pinjambuku.network.Constant.dataStore
+import com.example.pinjambuku.ui.screen.HomeViewModel
 
 
 @Composable
 fun HomeScreen(
-    viewModel: BookViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: BookViewModel = viewModel(factory = LocalContext.current.let {
+        ViewModelFactory.getInstance(
+            LocalContext.current,
+            it.dataStore
+        )
+    })
 ) {
 
 
@@ -359,10 +367,10 @@ fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview(){
-    PinjamBukuTheme{
-        HomeScreen( viewModel = BookViewModel(application = Application()) , navController = rememberNavController())
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HomeScreenPreview(){
+//    PinjamBukuTheme{
+//        HomeScreen( viewModel = BookViewModel(application = Application()) , navController = rememberNavController())
+//    }
+//}

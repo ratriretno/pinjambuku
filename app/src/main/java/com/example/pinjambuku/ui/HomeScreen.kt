@@ -88,10 +88,12 @@ fun HomeScreen(
         )
     }),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
-    context: Context = LocalContext.current
+    context: Context = LocalContext.current,
+    goToDetailBook: (BookModel) -> Unit,
 ) {
 
     val books = viewModel.bookList.collectAsStateWithLifecycle()
+    val booksFirstLoad = viewModel.bookListAllFirstLoad.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsState()
     val query by viewModel.query.collectAsState()
 
@@ -125,7 +127,7 @@ fun HomeScreen(
         }
     }
 
-    ScrollItemHome(books, isLoading, query, viewModel)
+    ScrollItemHome(books, isLoading, query, viewModel, goToDetailBook)
 }
 
 @Composable
@@ -133,7 +135,8 @@ fun ScrollItemHome(
     books: State<List<BookModel>>,
     isLoading: Boolean,
     query: String,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    goToDetailBook: (BookModel) -> Unit
 ){
     //    val borrowedIds by viewModel.borrowedBookIds.observeAsState(emptySet())             // utk clickable or frozen item di homescreen
     //Scaffold() {innerPadding ->
@@ -157,7 +160,7 @@ fun ScrollItemHome(
         if (isLoading) {
             BigCircularLoading()
         } else {
-            BookListHome(books)
+            BookListHome(books, goToDetailBook)
         }
 
     }
@@ -179,13 +182,13 @@ fun BigCircularLoading() {
 }
 
 @Composable
-fun BookListHome(books: State<List<BookModel>>) {
+fun BookListHome(books: State<List<BookModel>>, goToDetailBook: (BookModel) -> Unit) {
     LazyColumn(modifier = Modifier.testTag("BookList")) {
 
         items(books.value) { book ->
             BookListItem(
                 book,
-                onClick = {                                                 //spy bisa klik ke Detail //spy bisa klik ke Detail
+                onClick = { goToDetailBook(book)                                                //spy bisa klik ke Detail //spy bisa klik ke Detail
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -215,7 +218,7 @@ fun BookListItem(
     Log.i("BookListItem", book.toString())
 
     // val cardModifier di bawah ini utk clickable or frozen item di homescreen !!!
-    val cardModifier = if (book.status.equals("available")) {
+    val cardModifier = if (book.available == true) {
         modifier
             .padding(10.dp)
             .wrapContentSize()
@@ -296,7 +299,7 @@ fun BookListItem(
             }
 
             //Jika item un-clickable, ada tambahan badge "Dipinjam" disertai icon, jika item un-clickable
-            if (!book.status.equals("available")) {
+            if (!book.available!!) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -397,6 +400,8 @@ fun DecoratedTextField(query: String, viewModel: HomeViewModel) {
                     IconButton(onClick = { viewModel.search()}) {
                         Icon(Icons.Default.Search, contentDescription = "Clear text")
                     }
+                } else{
+
                 }
             }
         },

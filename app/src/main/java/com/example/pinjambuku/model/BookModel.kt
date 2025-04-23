@@ -11,7 +11,7 @@ data class BookModel (
     @SerializedName("name"         ) var name        : String? = null,
     @SerializedName("description"  ) var description : String? = null,
     @SerializedName("id_owner"     ) var idOwner     : String? = null,
-    @SerializedName("status"       ) var status      : String? = null,
+    @SerializedName("available"    ) var available   : Boolean? = null,
     @SerializedName("photo_url"    ) var photoUrl    : String? = null,
     @SerializedName("date_created" ) var dateCreated : String? = null,
     @SerializedName("date_updated" ) var dateUpdated : String? = null,

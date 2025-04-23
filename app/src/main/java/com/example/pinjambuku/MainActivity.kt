@@ -19,7 +19,6 @@ import com.example.pinjambuku.ui.Banner
 import com.example.pinjambuku.ui.DetailScreen
 import com.example.pinjambuku.ui.HomeScreen
 import com.example.pinjambuku.ui.LoginScreen
-import com.example.pinjambuku.ui.Profile
 import com.example.pinjambuku.ui.SignUp
 import com.example.pinjambuku.ui.theme.PinjamBukuTheme
 

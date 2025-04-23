@@ -71,6 +71,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.pinjambuku.BookViewModel
 import com.example.pinjambuku.di.ViewModelFactory
 import com.example.pinjambuku.model.BookModel
 import com.example.pinjambuku.network.Constant.dataStore
@@ -415,7 +416,14 @@ fun DecoratedTextField(query: String, viewModel: HomeViewModel) {
 
 
 @Composable
-fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier) {
+fun BottomBar(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    viewModel: BookViewModel,
+    login: Boolean,
+    goToLogin: () -> Unit,
+    goToProfile:() ->Unit
+) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -423,6 +431,13 @@ fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier) {
     NavigationBar(
         containerColor = colorResource(id=R.color.hijau),
         modifier = modifier) {
+
+        val profileScreen : Screen = if(login){
+            Screen.Profile
+        } else {
+            Screen.Login
+        }
+
         val navigationItems = listOf(
             BottomBarItem(title = stringResource(R.string.menu_home),
                 icon = Icons.Default.Home,
@@ -445,7 +460,7 @@ fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier) {
             ),
             BottomBarItem(title = stringResource(R.string.menu_profile),
                 icon = Icons.Default.AccountCircle,
-                screen = Screen.Profile
+                screen = profileScreen
             )
         )
         navigationItems.map { item ->
@@ -456,17 +471,23 @@ fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier) {
                 //selected = item.title == navigationItems[0].title,
                 selected = currentRoute == item.screen.route,
                 onClick = {
-
                     if (currentRoute != item.screen.route) {
-                        navController.navigate(item.screen.route) {
-                            // Pop up ke the start destination
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
+                        if(item.screen.route==profileScreen.route){
+                            Log.i("item", item.screen.route)
+                            Log.i("item", profileScreen.route)
+                            goToLogin()
+                        } else{
+                            navController.navigate(item.screen.route) {
+                                // Pop up ke the start destination
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                // Prevent multiple copies
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            // Prevent multiple copies
-                            launchSingleTop = true
-                            restoreState = true
                         }
+
                     }
                 }
             )

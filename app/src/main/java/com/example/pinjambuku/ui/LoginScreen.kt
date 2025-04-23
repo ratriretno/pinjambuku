@@ -1,5 +1,6 @@
 package com.example.pinjambuku.ui
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -56,7 +57,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(){
+fun LoginScreen(navigateBack: () -> Unit){
 
     val context = LocalContext.current // <-- Get context for Toast
     var newTextValue by remember{mutableStateOf("")}
@@ -64,6 +65,7 @@ fun LoginScreen(){
     var isPasswordVisible by remember { mutableStateOf(false) }
     val isEmailValid = isValidEmail(newTextValue)                      //to check valid email format
 
+    Log.i("screen", "login")
 
     Scaffold (
         topBar = {
@@ -210,10 +212,10 @@ fun isValidEmail(email: String): Boolean {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview(){
-    PinjamBukuTheme{
-        LoginScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LoginScreenPreview(){
+//    PinjamBukuTheme{
+//        LoginScreen()
+//    }
+//}

@@ -1,6 +1,7 @@
 package com.example.pinjambuku.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import com.example.pinjambuku.data.SettingPreferences
 import com.example.pinjambuku.database.ExampleBorrowedBookDao
 import com.example.pinjambuku.database.ExampleBorrowedBookEntity
@@ -81,6 +82,26 @@ class BookRepository(
     //to convert the Int result (in Dao) into a Boolean
     suspend fun isFavorite(idBook: String): Boolean {
         return bookFavoriteDao.isFavorite(idBook) > 0
+    }
+
+    fun getLoginSetting(): LiveData<Boolean> {
+        return pref.getLoginSetting().asLiveData()
+    }
+
+    fun getUserSetting(): LiveData<String> {
+        return pref.getUserSetting().asLiveData()
+    }
+
+    suspend fun getLogin(): Boolean {
+        return pref.getLogin()
+    }
+
+    suspend fun getUserId(): String {
+        return pref.getUserId()
+    }
+
+    suspend fun saveLoginSetting(isLogin: Boolean, idUser : String) {
+        pref.saveLogin(isLogin, idUser)
     }
 
     companion object {

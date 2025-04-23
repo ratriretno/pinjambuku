@@ -15,7 +15,10 @@ import com.example.pinjambuku.model.ExampleBook
 import com.example.pinjambuku.model.ExampleBookData
 import com.example.pinjambuku.model.FavoriteBook
 import com.example.pinjambuku.repository.BookRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class BookViewModel (private val repository: BookRepository):  ViewModel(){
 
@@ -23,7 +26,11 @@ class BookViewModel (private val repository: BookRepository):  ViewModel(){
     var isBorrowed = mutableStateOf(false)
         private set
 
-    
+    private val _isLogin = MutableStateFlow(true)
+    val isLogin: StateFlow<Boolean> = _isLogin
+
+    private val _userId = MutableStateFlow("")
+    val userId: StateFlow<String> = _userId
 
     //val favoriteBook: LiveData<List<ExampleBook>> = repository.getAllFavoriteBook()
 
@@ -216,6 +223,26 @@ class BookViewModel (private val repository: BookRepository):  ViewModel(){
 
     fun updateSearchQuery(newQuery: String) {
         searchQuery = newQuery
+    }
+
+    fun getLogin () : LiveData<Boolean> {
+       return repository.getLoginSetting()
+    }
+
+    fun getUserIdSetting () : LiveData<String> {
+        return repository.getUserSetting()
+    }
+
+    fun setLogin(login : Boolean){
+        _isLogin.value= login
+    }
+
+    suspend fun getUserId () : String {
+        return repository.getUserId()
+    }
+
+    fun setUserId(id : String){
+        _userId.value = id
     }
 
 }

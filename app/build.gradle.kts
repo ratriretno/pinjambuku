@@ -42,13 +42,8 @@ android {
 }
 
 dependencies {
-
-    implementation(libs.androidx.lifecycle.viewmodel.compose.v270)
-    implementation(libs.androidx.navigation.compose.v277)
-
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.runtime.livedata)
-    ksp(libs.androidx.room.compiler.v261)
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -78,4 +73,14 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation (libs.kotlinx.coroutines.core)
+    implementation (libs.kotlinx.coroutines.android)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+
+    implementation(libs.androidx.datastore.preferences)
+    // Alternatively - use the following artifact without an Android dependency.
+    implementation(libs.androidx.datastore.preferences.core)
+    implementation(libs.coil.compose)
 }

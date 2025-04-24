@@ -20,10 +20,6 @@ interface ApiService {
     @FormUrlEncoded
     @POST("login.php")
     suspend fun login(@Field("email") email: String, @Field("password") password : String): LoginResponse
-//
-//    @GET("events")
-//    fun getEvent(@Query("active") status : Int ): Call<EventsResponse>
-//
-//    @GET("events")
-//    suspend fun getEvents(@Query("active") status : Int ): Call<EventsResponse>
+
+
 }

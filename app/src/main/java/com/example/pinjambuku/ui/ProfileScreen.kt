@@ -139,19 +139,19 @@ fun ProfileScreen(navigateBack: () -> Unit, idUser: String){
                         ){
                         item{
                             Spacer(modifier = Modifier.height(20.dp))
-                            Text(text = "Name")
+                            Text(text = "Name : Ratri Retno")
                         }
                         item{
                             Spacer(modifier = Modifier.height(20.dp))
-                            Text(text = "username")
+                            Text(text = "username : ratri")
                         }
                         item {
                             Spacer(modifier = Modifier.height(20.dp))
-                            Text(text = "Email")
+                            Text(text = "Email : ratri@gmail.com")
                         }
                         item {
                             Spacer(modifier = Modifier.height(20.dp))
-                            Text(text = "City")
+                            Text(text = "City : Depok")
                         }
 
                     }

@@ -118,7 +118,10 @@ fun PinjamBukuApp(
                         navigateBack = { navController.popBackStack() },
                         book = book,
                         login= isLogin,
-                        idUser = idUser)
+                        idUser = idUser,
+                        navigateToBorrow={navController.clearBackStack(BookDestinations.DETAIL_ROUTE)
+                            navActions.navigateToBorrow()}
+                    )
                 }
 
             }
@@ -135,7 +138,9 @@ fun PinjamBukuApp(
                     goToDetailBook = { book ->
                         navController.currentBackStackEntry?.savedStateHandle?.set("book", book)
                         navActions.navigateToDetail(book)
-                    }
+                    },
+                    navigateBack ={navController.clearBackStack(BookDestinations.DETAIL_ROUTE)
+                        navActions.navigateToHome()}
                     )
             }
 

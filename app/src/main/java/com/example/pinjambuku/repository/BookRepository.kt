@@ -112,6 +112,21 @@ class BookRepository(
         return result
     }
 
+    suspend fun returnBook(idBook: String, idTransaksi : String, bookName : String): ResultNetwork<BorrowResponse> {
+        var result: ResultNetwork<BorrowResponse> = ResultNetwork.Loading
+        try {
+//            val response = apiService.getNews(BuildConfig.API_KEY)
+            Log.i("repo", idTransaksi)
+            val response = apiService.returnBook(idBook, idTransaksi)
+            result = ResultNetwork.Success(response)
+        } catch (e: Exception) {
+            result = ResultNetwork.Error(e.message.toString())
+            Log.i("borrow", e.message.toString())
+        }
+
+        return result
+    }
+
     suspend fun signup(item: SignupItem): ResultNetwork<LoginResponse> {
         var result: ResultNetwork<LoginResponse> = ResultNetwork.Loading
         try {

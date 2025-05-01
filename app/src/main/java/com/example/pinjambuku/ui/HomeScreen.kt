@@ -369,7 +369,7 @@ fun DecoratedTextField(query: String, viewModel: HomeViewModel) {
                 ) {
                     if (query.isEmpty()) {
                         Text(
-                            text = "Cari nama buku atau penulis",
+                            text = "Cari nama buku",
                             style = TextStyle(color = Color.Gray)
                         )
                     }

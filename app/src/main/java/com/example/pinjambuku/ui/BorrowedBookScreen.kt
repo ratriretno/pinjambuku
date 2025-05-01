@@ -3,9 +3,7 @@ package com.example.pinjambuku.ui
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,7 +23,6 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -35,28 +31,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.filled.AccessAlarm
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
@@ -70,13 +55,12 @@ import com.example.pinjambuku.model.BookModel
 import com.example.pinjambuku.network.Constant.dataStore
 import com.example.pinjambuku.network.ResultNetwork
 import com.example.pinjambuku.ui.screen.BorrowBookViewModel
-import com.example.pinjambuku.ui.screen.HomeViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BorrowedBookScreen(
-    idUser : String,
+    idUser: String,
     viewModel: BorrowBookViewModel = viewModel(factory = LocalContext.current.let {
         ViewModelFactory.getInstance(
             LocalContext.current,
@@ -86,6 +70,7 @@ fun BorrowedBookScreen(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     context: Context = LocalContext.current,
     goToDetailBook: (BookModel) -> Unit,
+    navigateBack: () -> Unit,
 ){
     val books = viewModel.bookList.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -125,7 +110,7 @@ fun BorrowedBookScreen(
             CenterAlignedTopAppBar(
                 title = { Text(text = "Peminjaman") },
                 navigationIcon = {
-                    IconButton(onClick = {}) {                        //navController.popBackStack()
+                    IconButton(onClick = navigateBack) {                        //navController.popBackStack()
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
@@ -241,62 +226,115 @@ fun BookListItemBorrow(
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Column {
             Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp, start = 10.dp)
+                        .background(
+                            if (!book.endDate.isNullOrEmpty()){
+                                Color(0xB24CAF50)
+                            } else{
+                                Color(0xA3CDDC39)
+                            }
+                           , shape = RoundedCornerShape(8.dp))
 
-                //modifier = modifier.clickable {  }
-            ) {
-                BookImage(book)
-                Column(modifier
-                    .padding(12.dp)
-                    //.width(10.dp)
+
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
-                    Text(
-                        text = book.name.toString(),
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier
-                            //.fillMaxWidth()
-                            //.weight(1f)
-                            .padding(start = 5.dp)
-                    )
-                    Text(
-                        text = book.year.toString(),
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier
-                            //.fillMaxWidth()
-                            //.weight(1f)
-                            .padding(start = 10.dp)
-                    )
-                    Text(
-                        text = book.writer.toString(),
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier
-                            //.fillMaxWidth()
-                            //.weight(1f)
-                            .padding(start = 10.dp)
-                    )
-                    Text(
-                        text = "Pemilik: ${book.ownerName.toString()}",
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier
-                            //.fillMaxWidth()
-                            //.weight(1f)
-                            .padding(start = 10.dp)
+                var textNotice : String
+
+                if (!book.endDate.isNullOrEmpty()){
+                    Log.i("end", book.endDate)
+                    Log.i("end", book.name.toString())
+                    textNotice = "Selesei"
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Borrowed Icon",
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp)
                     )
 
-
+                } else{
+                    textNotice = "Dipinjam"
+                    Icon(
+                        imageVector = Icons.Default.AccessAlarm,
+                        contentDescription = "Borrowed Icon",
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
 
-            }
+
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = textNotice,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                }
+
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+
+                    //modifier = modifier.clickable {  }
+                ) {
+                    BookImage(book)
+                    Column(modifier
+                        .padding(12.dp)
+                        //.width(10.dp)
+                    ) {
+                        Text(
+                            text = book.name.toString(),
+                            maxLines = 3,
+                            overflow = TextOverflow.Ellipsis,
+                            fontWeight = FontWeight.Normal,
+                            modifier = Modifier
+                                //.fillMaxWidth()
+                                //.weight(1f)
+                                .padding(start = 5.dp)
+                        )
+                        Text(
+                            text = book.year.toString(),
+                            fontWeight = FontWeight.Normal,
+                            modifier = Modifier
+                                //.fillMaxWidth()
+                                //.weight(1f)
+                                .padding(start = 10.dp)
+                        )
+                        Text(
+                            text = book.writer.toString(),
+                            fontWeight = FontWeight.Normal,
+                            modifier = Modifier
+                                //.fillMaxWidth()
+                                //.weight(1f)
+                                .padding(start = 10.dp)
+                        )
+                        Text(
+                            text = "Pemilik: ${book.ownerName.toString()}",
+                            fontWeight = FontWeight.Normal,
+                            modifier = Modifier
+                                //.fillMaxWidth()
+                                //.weight(1f)
+                                .padding(start = 10.dp)
+                        )
+
+
+                    }
+
+                }
+        }
+
 
             //Jika item un-clickable, ada tambahan badge "Dipinjam" disertai icon, jika item un-clickable
 //            if (!book.available!!) {

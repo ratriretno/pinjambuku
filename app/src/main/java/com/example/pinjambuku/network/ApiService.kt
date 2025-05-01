@@ -40,6 +40,10 @@ interface ApiService {
     suspend fun borrowBook(@Field("idBuku") idBook: String, @Field("idUser") idUser : String,
                            @Field("name") bookName : String): BorrowResponse
 
+    @FormUrlEncoded
+    @POST("returnBook.php")
+    suspend fun returnBook(@Field("idBuku") idBook: String, @Field("idTransaksi") idTransaksi : String): BorrowResponse
+
 
     @GET("listBorrowBook.php")
     suspend fun listBorrowBook( @Query("id_user") idUser : String): BooksResponse

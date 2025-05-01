@@ -1,5 +1,6 @@
 package com.example.pinjambuku.ui.screen
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -43,8 +44,9 @@ class DetailViewModel (private val repository: BookRepository) : ViewModel() {
         _book.value=bookModel
     }
 
-    fun updateBook(){
+    fun updateBook(idUser: String){
         _book.value.available=false
+        _book.value.idBorrower=idUser
     }
     fun getLogin () : LiveData<Boolean> {
         return repository.getLoginSetting()
@@ -68,6 +70,14 @@ class DetailViewModel (private val repository: BookRepository) : ViewModel() {
         setLoading(true)
         viewModelScope.launch {
            _result.value= repository.borrow(idBook, idUser, bookName)
+        }
+    }
+
+    fun returnBook (idBook: String, idTransaksi: String, bookName : String){
+        setLoading(true)
+        Log.i("model", idTransaksi)
+        viewModelScope.launch {
+            _result.value= repository.returnBook(idBook, idTransaksi, bookName)
         }
     }
 

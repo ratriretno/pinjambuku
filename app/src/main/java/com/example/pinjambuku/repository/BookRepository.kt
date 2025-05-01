@@ -14,6 +14,7 @@ import com.example.pinjambuku.network.LoginItem
 import com.example.pinjambuku.network.LoginResponse
 import com.example.pinjambuku.utils.AppExecutors
 import com.example.pinjambuku.network.ResultNetwork
+import com.example.pinjambuku.network.SignupItem
 
 class BookRepository(
     private val apiService: ApiService,
@@ -65,6 +66,21 @@ class BookRepository(
         }
 
         return resultLogin
+    }
+
+    suspend fun signup(item: SignupItem): ResultNetwork<LoginResponse> {
+        var result: ResultNetwork<LoginResponse> = ResultNetwork.Loading
+        try {
+//            val response = apiService.getNews(BuildConfig.API_KEY)
+            val response = apiService.signup(item.email, item.password, item.fullname, item.username, item.city)
+            result = ResultNetwork.Success(response)
+            Log.i("login", response.toString())
+        } catch (e: Exception) {
+            result = ResultNetwork.Error(e.message.toString())
+            Log.i("login", e.message.toString())
+        }
+
+        return result
     }
 
     suspend fun insert(exampleBorrowedBookEntity: ExampleBorrowedBookEntity) =

@@ -9,6 +9,7 @@ import com.example.pinjambuku.BookViewModel
 import com.example.pinjambuku.repository.BookRepository
 import com.example.pinjambuku.ui.screen.HomeViewModel
 import com.example.pinjambuku.ui.screen.LoginViewModel
+import com.example.pinjambuku.ui.screen.SignupViewModel
 
 
 class ViewModelFactory private constructor(private val repository: BookRepository) :
@@ -21,6 +22,8 @@ class ViewModelFactory private constructor(private val repository: BookRepositor
             return BookViewModel(repository) as T}
         else if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(repository) as T}
+        else if (modelClass.isAssignableFrom(SignupViewModel::class.java)) {
+            return SignupViewModel(repository) as T}
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
 

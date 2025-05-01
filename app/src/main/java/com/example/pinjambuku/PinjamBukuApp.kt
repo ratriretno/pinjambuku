@@ -29,6 +29,7 @@ import com.example.pinjambuku.ui.BorrowedBookScreen
 import com.example.pinjambuku.ui.FavoriteScreen
 import com.example.pinjambuku.ui.LoginScreen
 import com.example.pinjambuku.ui.ProfileScreen
+import com.example.pinjambuku.ui.SignUp
 import com.example.pinjambuku.ui.navigation.BookDestinations
 import com.example.pinjambuku.ui.navigation.BookDestinationsArgs.BOOK_ID_ARG
 import com.example.pinjambuku.ui.navigation.BookDestinationsArgs.USER_ID_ARG
@@ -141,7 +142,19 @@ fun PinjamBukuApp(
 
             composable(route = BookDestinations.LOGIN_ROUTE
             ) {
-                LoginScreen(navigateBack = { navController.popBackStack() })
+                LoginScreen(
+                    navigateBack = { navController.popBackStack() },
+                    signUp = {navActions.navigateToSignup()},
+                    goToProfile = { navActions.navigateToProfile(idUser) }
+                    )
+            }
+
+            composable(route = BookDestinations.SIGNUP_ROUTE
+            ) {
+                SignUp(
+                    navigateBack = { navController.popBackStack() },
+                    goToProfile = { navActions.navigateToProfile(idUser) }
+                )
             }
 //            composable(Screen.Detail.route) {
 //                DetailScreen(navController = navController)

@@ -3,14 +3,17 @@ package com.example.pinjambuku.ui
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -55,6 +58,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -70,12 +74,14 @@ import com.example.pinjambuku.ui.screen.LoginViewModel
 @Composable
 fun LoginScreen(
     navigateBack: () -> Unit,
+    signUp:()-> Unit,
     viewModel: LoginViewModel = viewModel(factory = LocalContext.current.let {
         ViewModelFactory.getInstance(
             LocalContext.current,
             it.dataStore
         )
     }),
+    goToProfile: (String) -> Unit,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
 
@@ -109,6 +115,7 @@ fun LoginScreen(
                         Toast.LENGTH_SHORT
                     ).show()
                     viewModel.setLoginSetting(result.data)
+                    goToProfile(result.data.idUser)
                 }
 
                 is ResultNetwork.Error -> {
@@ -299,8 +306,30 @@ fun LoginScreen(
                         )
                         { Text(stringResource(R.string.login_button), fontSize = 18.sp) }
 
-                    }
+                        Row(modifier =
+                        Modifier.width(250.dp)
+                        ) {
+                            Text(
+                                text = "Belum punya akun?",
+                                modifier = Modifier.padding(horizontal = 20.dp, vertical = 2.dp),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.labelMedium,
+                            )
 
+                            Text(
+                                text = "Register",
+                                modifier = Modifier.clickable(
+                                    onClick = signUp
+                                ),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold, color = Color.Blue,
+
+                            )
+                        }
+
+
+                    }
                 }
             }
 

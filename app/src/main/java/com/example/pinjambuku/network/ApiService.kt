@@ -21,5 +21,15 @@ interface ApiService {
     @POST("login.php")
     suspend fun login(@Field("email") email: String, @Field("password") password : String): LoginResponse
 
+    @FormUrlEncoded
+    @POST("signUp.php")
+    suspend fun signup(
+        @Field("email") email: String,
+        @Field("password") password : String,
+        @Field("fullname") fullname : String,
+        @Field("username") username : String,
+        @Field("city") city : String
+        ): LoginResponse
+
 
 }

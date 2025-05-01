@@ -100,18 +100,17 @@ fun LoginScreen(
             when (result) {
                 is ResultNetwork.Loading -> {
                     viewModel.setLoading(true)
-                    Log.i("login update?", isLoading.toString())
+//                    Log.i("login update?", isLoading.toString())
 
                 }
 
                 is ResultNetwork.Success -> {
                     viewModel.setLoading(false)
 
-                    Log.i("login update?", isLoading.toString())
-                    Log.i("login update?", result.data.toString())
+                    Log.i("login update id?", result.data.idUser)
                     Toast.makeText(
                         context,
-                        result.data.message,
+                        result.data.idUser,
                         Toast.LENGTH_SHORT
                     ).show()
                     viewModel.setLoginSetting(result.data)

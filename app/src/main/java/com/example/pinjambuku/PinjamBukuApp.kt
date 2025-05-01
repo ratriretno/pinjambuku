@@ -1,5 +1,6 @@
 package com.example.pinjambuku
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -134,9 +135,8 @@ fun PinjamBukuApp(
                 )
             ) {
 //                val id = navController.previousBackStackEntry?.savedStateHandle?.get<String>("idUser")
-
-                    ProfileScreen(navigateBack = { navController.popBackStack() }, idUser = idUser)
-
+                    Log.i("compos", idUser)
+                    ProfileScreen(navigateBack = {navActions.navigateToHome()}, idUser = idUser)
 
             }
 

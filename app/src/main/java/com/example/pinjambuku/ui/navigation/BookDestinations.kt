@@ -1,7 +1,9 @@
 package com.example.pinjambuku.ui.navigation
 
+import android.util.Log
 import androidx.navigation.NavHostController
 import com.example.pinjambuku.model.BookModel
+import com.example.pinjambuku.ui.navigation.BookDestinations.HOME_ROUTE
 import com.example.pinjambuku.ui.navigation.BookDestinations.LOGIN_ROUTE
 import com.example.pinjambuku.ui.navigation.BookDestinations.SIGNUP_ROUTE
 import com.example.pinjambuku.ui.navigation.BookDestinationsArgs.BOOK_ID_ARG
@@ -42,6 +44,7 @@ class BookNavigationActions(private val navController: NavHostController) {
     }
 
     fun navigateToProfile(id : String) {
+        Log.i("navigate", id)
         navController.navigate("$PROFILE_SCREEN/${id}")
     }
 
@@ -51,5 +54,9 @@ class BookNavigationActions(private val navController: NavHostController) {
 
     fun navigateToSignup(){
         navController.navigate(SIGNUP_ROUTE)
+    }
+
+    fun navigateToHome(){
+        navController.navigate(HOME_ROUTE)
     }
 }

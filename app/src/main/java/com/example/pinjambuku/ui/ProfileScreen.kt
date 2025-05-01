@@ -78,9 +78,12 @@ fun ProfileScreen(
     val context = LocalContext.current // <-- G
     val isLoading by viewModel.isLoading.collectAsState()//to check valid email format
 
-    viewModel.profile(idUser)
+    Log.i("id profile", idUser)
+    if (idUser.isNotEmpty()){
+        viewModel.profile(idUser)
+    }
 
-    var profile =ProfileItem ("","","","","")
+    var profile = ProfileItem("", "", "", "", "")
 
     viewModel.result.observe(lifecycleOwner) { result ->
         if (result != null) {
@@ -102,7 +105,7 @@ fun ProfileScreen(
 //                        Toast.LENGTH_SHORT
 //                    ).show()
 
-                    profile=result.data.profile
+                    profile = result.data.profile
 
                 }
 
@@ -163,110 +166,119 @@ fun ProfileScreen(
 //        }
 
     ) { innerPadding ->
-        if (isLoading){
+        if (isLoading) {
             BigCircularLoadingLogin()
-        } else{
+        } else {
 
-        //var text by remember { mutableStateOf("") }
+            //var text by remember { mutableStateOf("") }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            Box(
-                modifier = Modifier                 //box ke-1
-                    .fillMaxWidth()
-                    .height(230.dp)
-                    .padding(10.dp)
-                    .background(colorResource(id = R.color.abu), shape = RoundedCornerShape(20.dp)),
-                //.padding(innerPadding),
-                contentAlignment = Alignment.Center
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
             ) {
-                Surface(
-                    modifier = Modifier.size(170.dp),
-                    shape = CircleShape,
-                    border = BorderStroke(width = 2.dp, color = Color.Gray),
-                    color = Color.White
+                Box(
+                    modifier = Modifier                 //box ke-1
+                        .fillMaxWidth()
+                        .height(230.dp)
+                        .padding(10.dp)
+                        .background(
+                            colorResource(id = R.color.abu),
+                            shape = RoundedCornerShape(20.dp)
+                        ),
+                    //.padding(innerPadding),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_user),
-                        contentDescription = "user picture",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    Surface(
+                        modifier = Modifier.size(170.dp),
+                        shape = CircleShape,
+                        border = BorderStroke(width = 2.dp, color = Color.Gray),
+                        color = Color.White
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_user),
+                            contentDescription = "user picture",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+
                 }
 
-            }
 
+                Box(
+                    modifier = Modifier         //box ke-2
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        //.height(300.dp)
+                        .padding(10.dp)
+                        .background(
+                            colorResource(id = R.color.krem),
+                            shape = RoundedCornerShape(20.dp)
+                        ),
+                    //.padding(innerPadding),
 
-            Box(
-                modifier = Modifier         //box ke-2
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    //.height(300.dp)
-                    .padding(10.dp)
-                    .background(
-                        colorResource(id = R.color.krem),
-                        shape = RoundedCornerShape(20.dp)
-                    ),
-                //.padding(innerPadding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            //.verticalScroll(scrollState)
+                            .padding(16.dp)
+                            .imePadding(),
+                        //.windowInsetsPadding(WindowInsets.ime)
+                        //.navigationBarsWithImePadding(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(15.dp),
 
-                contentAlignment = Alignment.Center
-            ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        //.verticalScroll(scrollState)
-                        .padding(16.dp)
-                        .imePadding(),
-                    //.windowInsetsPadding(WindowInsets.ime)
-                    //.navigationBarsWithImePadding(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(15.dp),
-
-                    ) {
-                    item {
-                        Spacer(modifier = Modifier.height(20.dp))
-                        Text(text = profile.fullname )
-                    }
+                        ) {
+                        item {
+                            Spacer(modifier = Modifier.height(20.dp))
+                            Text(text = profile.fullname)
+                        }
 //                    item {
 //                        Spacer(modifier = Modifier.height(20.dp))
 //                        Text(text = "username : ratri")
 //                    }
-                    item {
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = profile.email)
-                    }
-                    item {
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = profile.city)
-                    }
-
-                    item {
-                        Spacer(modifier = Modifier.height(40.dp))
-                        Button(
-                            modifier = Modifier
-                                .width(250.dp)
-                                .height(48.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.merah)),
-                            onClick = {}) {
-                            Text(stringResource(R.string.logout_button), fontSize = 18.sp)
-
+                        item {
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Text(text = profile.email)
                         }
+                        item {
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Text(text = profile.city)
+                        }
+
+                        item {
+                            Spacer(modifier = Modifier.height(40.dp))
+                            Button(
+                                modifier = Modifier
+                                    .width(250.dp)
+                                    .height(48.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = colorResource(
+                                        id = R.color.merah
+                                    )
+                                ),
+                                onClick = {viewModel.logout()
+                                    navigateBack()}
+                            ) {
+                                Text(stringResource(R.string.logout_button), fontSize = 18.sp)
+
+                            }
+                        }
+
+
                     }
-
-
                 }
-            }
 
+
+            }
 
         }
 
+
     }
-
-
-}
 }
 
 /*

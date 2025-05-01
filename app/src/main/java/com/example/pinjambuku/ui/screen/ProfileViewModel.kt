@@ -33,9 +33,9 @@ class ProfileViewModel (private val repository: BookRepository) : ViewModel() {
         _isLoading.value = loading
     }
 
-    fun setLoginSetting(loginResponse: LoginResponse) {
+    fun logout() {
         viewModelScope.launch {
-            repository.saveLoginSetting(loginResponse.login, loginResponse.idUser)
+            repository.saveLoginSetting(false, "")
         }
     }
 

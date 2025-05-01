@@ -10,6 +10,7 @@
     <string name="email_example">you@abc.com</string>
     <string name="login_button">Login</string>
     <string name="signup_button">Create Your Account</string>
+    <string name="logout_button">Logout</string>
     <string name="signup_fullname_title">Full Name : *</string>
     <string name="signup_username_title">Username :*</string>
     <string name="signup_email_title">Email : *</string>

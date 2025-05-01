@@ -31,5 +31,9 @@ interface ApiService {
         @Field("city") city : String
         ): LoginResponse
 
+    @FormUrlEncoded
+    @POST("getProfile.php")
+    suspend fun profile(@Field("idUser") id : String) : ProfileResponse
+
 
 }

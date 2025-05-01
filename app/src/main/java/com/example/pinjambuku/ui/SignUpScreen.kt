@@ -150,7 +150,7 @@ fun SignUp(
                 }
             },
                 navigationIcon = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = navigateBack) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back Button")
                     }
                 },

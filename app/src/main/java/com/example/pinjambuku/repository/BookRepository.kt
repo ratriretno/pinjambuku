@@ -12,6 +12,7 @@ import com.example.pinjambuku.model.BookModel
 import com.example.pinjambuku.network.ApiService
 import com.example.pinjambuku.network.LoginItem
 import com.example.pinjambuku.network.LoginResponse
+import com.example.pinjambuku.network.ProfileResponse
 import com.example.pinjambuku.utils.AppExecutors
 import com.example.pinjambuku.network.ResultNetwork
 import com.example.pinjambuku.network.SignupItem
@@ -66,6 +67,20 @@ class BookRepository(
         }
 
         return resultLogin
+    }
+
+    suspend fun profile(id: String): ResultNetwork<ProfileResponse> {
+        var result: ResultNetwork<ProfileResponse> = ResultNetwork.Loading
+        try {
+//            val response = apiService.getNews(BuildConfig.API_KEY)
+            val response = apiService.profile(id)
+            result = ResultNetwork.Success(response)
+        } catch (e: Exception) {
+            result = ResultNetwork.Error(e.message.toString())
+            Log.i("login", e.message.toString())
+        }
+
+        return result
     }
 
     suspend fun signup(item: SignupItem): ResultNetwork<LoginResponse> {

@@ -6,7 +6,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class BookModel (
-
     @SerializedName("id"           ) var id          : String? = null,
     @SerializedName("name"         ) var name        : String? = null,
     @SerializedName("description"  ) var description : String? = null,

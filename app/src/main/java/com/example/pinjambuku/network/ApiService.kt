@@ -39,4 +39,8 @@ interface ApiService {
     @POST("borrowBook.php")
     suspend fun borrowBook(@Field("idBuku") idBook: String, @Field("idUser") idUser : String,
                            @Field("name") bookName : String): BorrowResponse
+
+
+    @GET("listBorrowBook.php")
+    suspend fun listBorrowBook( @Query("id_user") idUser : String): BooksResponse
 }

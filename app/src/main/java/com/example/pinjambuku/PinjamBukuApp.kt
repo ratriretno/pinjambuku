@@ -130,7 +130,13 @@ fun PinjamBukuApp(
             }
 
             composable(Screen.BorrowedBook.route) {
-                BorrowedBookScreen( navController = navController)
+                BorrowedBookScreen(
+                    idUser = idUser,
+                    goToDetailBook = { book ->
+                        navController.currentBackStackEntry?.savedStateHandle?.set("book", book)
+                        navActions.navigateToDetail(book)
+                    }
+                    )
             }
 
             composable(route = BookDestinations.PROFILE_ROUTE,

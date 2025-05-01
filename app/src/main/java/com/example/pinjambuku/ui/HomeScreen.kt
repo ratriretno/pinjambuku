@@ -168,7 +168,7 @@ fun ScrollItemHome(
 }
 
 @Composable
-private fun BigCircularLoading() {
+fun BigCircularLoading() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -301,29 +301,29 @@ fun BookListItem(
             }
 
             //Jika item un-clickable, ada tambahan badge "Dipinjam" disertai icon, jika item un-clickable
-            if (!book.available!!) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(top = 4.dp, start = 10.dp)
-                        .background(Color(0xFFFFCDD2), shape = RoundedCornerShape(8.dp))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = "Borrowed Icon",
-                        tint = Color.Red,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "Dipinjam",
-                        color = Color.Red,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                }
-            }
+//            if (!book.available!!) {
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    modifier = Modifier
+//                        .padding(top = 4.dp, start = 10.dp)
+//                        .background(Color(0xFFFFCDD2), shape = RoundedCornerShape(8.dp))
+//                        .padding(horizontal = 8.dp, vertical = 4.dp)
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Default.Lock,
+//                        contentDescription = "Borrowed Icon",
+//                        tint = Color.Red,
+//                        modifier = Modifier.size(16.dp)
+//                    )
+//                    Spacer(modifier = Modifier.width(4.dp))
+//                    Text(
+//                        text = "Dipinjam",
+//                        color = Color.Red,
+//                        fontWeight = FontWeight.Bold,
+//                        fontSize = 14.sp
+//                    )
+//                }
+//            }
         }
     }
 }
@@ -343,29 +343,6 @@ fun BookImage(book: BookModel){
         )
     }
 
-}
-
-@Composable
-fun SearchBar(
-//    query: String,
-//    onQueryChanged: (String) -> Unit
-) {
-
-    TextField(
-        value = "",
-        onValueChange = {},
-        label = { Text("Cari nama buku atau penulis") },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp)
-            .clip(RoundedCornerShape(30.dp))
-            .border(2.dp, Color.DarkGray, RoundedCornerShape(30.dp)),
-        maxLines = 1,
-        singleLine = true,
-        textStyle = TextStyle(
-            color = Color.Black, fontSize = 20.sp
-        )
-    )
 }
 
 @Composable

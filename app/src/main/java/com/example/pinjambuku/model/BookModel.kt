@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class BookModel (
     @SerializedName("id"           ) var id          : String? = "",
+    @SerializedName("id_transaksi") var idTransaksi  : String? = "",
     @SerializedName("name"         ) var name        : String? = "",
     @SerializedName("description"  ) var description : String? = "",
     @SerializedName("id_owner"     ) var idOwner     : String? = "",
@@ -17,6 +18,6 @@ data class BookModel (
     @SerializedName("year"         ) var year        : String? = "",
     @SerializedName("writer"       ) var writer      : String? = "",
     @SerializedName("publisher"    ) var publisher   : String? = "",
-    @SerializedName("full_name"    ) var ownerName   : String? = ""
+    @SerializedName("full_name"    ) var ownerName   : String? = "",
 
 ) :Parcelable

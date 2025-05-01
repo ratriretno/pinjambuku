@@ -1,8 +1,11 @@
 package com.example.pinjambuku.ui
 
-import android.app.Application
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,11 +13,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -27,126 +32,101 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.pinjambuku.BookViewModel
-import com.example.pinjambuku.model.ExampleBook
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
 import com.example.pinjambuku.R
 import com.example.pinjambuku.di.ViewModelFactory
+import com.example.pinjambuku.model.BookModel
 import com.example.pinjambuku.network.Constant.dataStore
-import com.example.pinjambuku.ui.theme.PinjamBukuTheme
+import com.example.pinjambuku.network.ResultNetwork
+import com.example.pinjambuku.ui.screen.BorrowBookViewModel
+import com.example.pinjambuku.ui.screen.HomeViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BorrowedBookScreen(
-    navController: NavHostController,
-    viewModel: BookViewModel = viewModel(factory = LocalContext.current.let {
+    idUser : String,
+    viewModel: BorrowBookViewModel = viewModel(factory = LocalContext.current.let {
         ViewModelFactory.getInstance(
             LocalContext.current,
             it.dataStore
         )
-    })
+    }),
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    context: Context = LocalContext.current,
+    goToDetailBook: (BookModel) -> Unit,
 ){
-    val borrowedBook by viewModel.borrowedBook.observeAsState(emptyList())
+    val books = viewModel.bookList.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsState()
 
-    if (borrowedBook.isEmpty()) {
-/*
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-*/
-            Scaffold (
-                topBar = {
-                    CenterAlignedTopAppBar(
-                        title = { Text(text = "Buku Yang Dipinjam") },
-                        navigationIcon = {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Row (verticalAlignment = Alignment.CenterVertically){
-                                    Icon(
-                                        imageVector = Icons.Default.ArrowBack,
-                                        contentDescription = "Back"
-                                    )
-                                    Spacer(modifier = Modifier.width(10.dp))
-                                    //Text(text = "Back")
-                                }
+    viewModel.result.observe(lifecycleOwner) { result ->
+        if (result != null) {
+            when (result) {
+                is ResultNetwork.Loading -> {
+                    viewModel.setLoading(true)
+                    Log.i("loading update?", isLoading.toString())
 
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = colorResource(R.color.hijau),
-                            titleContentColor = Color.White,
-                            navigationIconContentColor = Color.White
-                        )
-                    )
-                },
-            ){paddingValues ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    contentAlignment = Alignment.Center
-                )
-                {
-                    Text(
-                        text = "Tidak ada buku yang dipinjam",
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center
-                    )
+                }
+
+                is ResultNetwork.Success -> {
+                    viewModel.setLoading(false)
+                    viewModel.setBooks(result.data.listBooks)
+
+                }
+
+                is ResultNetwork.Error -> {
+                    viewModel.setLoading(false)
+//                    binding.progressBar2.visibility = View.GONE
+                    Toast.makeText(
+                        context,
+                        "Terjadi kesalahan" + result.error,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
-
-       // }
-    } else {
-        // Show borrowed list
-        BorrowedBookList(
-            books = borrowedBook,
-            navController = navController,
-            viewModel = viewModel
-        )
+        }
     }
 
+    viewModel.listBorrowBook(idUser)
 
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BorrowedBookList(                               //bertugas mengambil data Room database yang sudah dibaca oleh borrowedBook: LiveData<List<ExampleBook>> = repository.getAllBorrowedBook().map (di ViewModel)
-    books: List<ExampleBook>,
-    navController: NavHostController,
-    viewModel: BookViewModel,
-    modifier: Modifier = Modifier
-) {
-
-    Scaffold (
+    Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = "Buku Yang Dipinjam") },
+                title = { Text(text = "Peminjaman") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Row (verticalAlignment = Alignment.CenterVertically){
+                    IconButton(onClick = {}) {                        //navController.popBackStack()
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = "Back"
@@ -163,80 +143,133 @@ fun BorrowedBookList(                               //bertugas mengambil data Ro
                     navigationIconContentColor = Color.White
                 )
             )
-        },
-    ) { innerPadding ->
-
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            items(books, key = { it.idBuku }) { book ->
-                BorrowBookListItem(
-                    image = book.image,
-                    title = book.judul,
-                    year = book.tahun,
-                    writer = book.penulis,
-                    owner = book.pemilik,
-                    onClick = {
-                        viewModel.selectedBook = book
-                        navController.navigate("detail")        // Navigate to detail screen
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
         }
 
+    ) { innerPadding ->
+
+        if (isLoading) {
+            BigCircularLoadingLogin()
+        } else {
+
+            Column() {
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+
+                    //Main content
+                    ScrollItemBorrow (books, isLoading, viewModel, goToDetailBook)
+                }
+            }
+        }
     }
+
+
 
 }
 
+@Composable
+fun ScrollItemBorrow(
+    books: State<List<BookModel>>,
+    isLoading: Boolean,
+    viewModel: BorrowBookViewModel,
+    goToDetailBook: (BookModel) -> Unit
+){
+    //    val borrowedIds by viewModel.borrowedBookIds.observeAsState(emptySet())             // utk clickable or frozen item di homescreen
+    //Scaffold() {innerPadding ->
+    Column(
+        modifier = Modifier
+            //.verticalScroll(rememberScrollState())
+            .fillMaxSize()
+        //.padding(innerPadding)
+    ) {
+
+
+        if (isLoading) {
+            BigCircularLoading()
+        } else {
+            BookListBorrow(books, goToDetailBook)
+        }
+
+    }
+}
 
 @Composable
-fun BorrowBookListItem(
-    image: Int,
-    title: String,
-    year: String,
-    writer: String,
-    owner: String,
+fun BookListBorrow(books: State<List<BookModel>>, goToDetailBook: (BookModel) -> Unit) {
+    LazyColumn(modifier = Modifier.testTag("BookList")) {
+
+        items(books.value) { book ->
+            BookListItemBorrow(
+                book,
+                onClick = { goToDetailBook(book)                                                //spy bisa klik ke Detail //spy bisa klik ke Detail
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
+
+    }
+}
+
+@Composable
+fun BookListItemBorrow(
+    book: BookModel,
     onClick: () -> Unit,                    //spy bisa klik ke Detail
     modifier: Modifier
 ) {
 
-    Card(modifier
+    Log.i("BookListItem", book.name.toString())
+    Log.i("BookListItem", book.toString())
+
+    // val cardModifier di bawah ini utk clickable or frozen item di homescreen !!!
+    val cardModifier =
+        modifier
+            .padding(10.dp)
+            .wrapContentSize()
+            .clickable { onClick() }
+
+    Card(
+        modifier = cardModifier,
+        /*
         .padding(10.dp)
         .wrapContentSize()
-        .clickable { onClick() },               //spy bisa klik ke Detail
+        .clickable { onClick() },        //spy bisa klik ke Detail
+*/
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(10.dp)
-    ){
+    ) {
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
-
+        ) {
             Row(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically,
+
                 //modifier = modifier.clickable {  }
-            ){
-                Image(painter = painterResource(id = image), contentDescription = title)
-                Column (modifier.padding(12.dp)){
+            ) {
+                BookImage(book)
+                Column(modifier
+                    .padding(12.dp)
+                    //.width(10.dp)
+                ) {
                     Text(
-                        text = title,
-                        maxLines = 1,
+                        text = book.name.toString(),
+                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         fontWeight = FontWeight.Normal,
                         modifier = Modifier
                             //.fillMaxWidth()
                             //.weight(1f)
-                            .padding(start = 10.dp)
+                            .padding(start = 5.dp)
                     )
                     Text(
-                        text = year,
+                        text = book.year.toString(),
                         fontWeight = FontWeight.Normal,
                         modifier = Modifier
                             //.fillMaxWidth()
@@ -244,7 +277,7 @@ fun BorrowBookListItem(
                             .padding(start = 10.dp)
                     )
                     Text(
-                        text = writer,
+                        text = book.writer.toString(),
                         fontWeight = FontWeight.Normal,
                         modifier = Modifier
                             //.fillMaxWidth()
@@ -252,49 +285,47 @@ fun BorrowBookListItem(
                             .padding(start = 10.dp)
                     )
                     Text(
-                        text = "Pemilik: $owner",
+                        text = "Pemilik: ${book.ownerName.toString()}",
                         fontWeight = FontWeight.Normal,
                         modifier = Modifier
                             //.fillMaxWidth()
                             //.weight(1f)
                             .padding(start = 10.dp)
                     )
+
+
                 }
 
-
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(top = 4.dp, start = 10.dp)
-                    .background(Color(0xFFFFCDD2), shape = RoundedCornerShape(8.dp))
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = "Borrowed Icon",
-                    tint = Color.Red,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "Dipinjam",
-                    color = Color.Red,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )
             }
 
-
-
+            //Jika item un-clickable, ada tambahan badge "Dipinjam" disertai icon, jika item un-clickable
+//            if (!book.available!!) {
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    modifier = Modifier
+//                        .padding(top = 4.dp, start = 10.dp)
+//                        .background(Color(0xFFFFCDD2), shape = RoundedCornerShape(8.dp))
+//                        .padding(horizontal = 8.dp, vertical = 4.dp)
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Default.Lock,
+//                        contentDescription = "Borrowed Icon",
+//                        tint = Color.Red,
+//                        modifier = Modifier.size(16.dp)
+//                    )
+//                    Spacer(modifier = Modifier.width(4.dp))
+//                    Text(
+//                        text = "Dipinjam",
+//                        color = Color.Red,
+//                        fontWeight = FontWeight.Bold,
+//                        fontSize = 14.sp
+//                    )
+//                }
+//            }
         }
-
-
-
-
     }
-
 }
+
 
 /*
 @Preview(showBackground = true)

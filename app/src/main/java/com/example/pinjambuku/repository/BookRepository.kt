@@ -10,6 +10,7 @@ import com.example.pinjambuku.database.FavoriteBookDao
 import com.example.pinjambuku.database.FavoriteBookEntity
 import com.example.pinjambuku.model.BookModel
 import com.example.pinjambuku.network.ApiService
+import com.example.pinjambuku.network.BooksResponse
 import com.example.pinjambuku.network.BorrowResponse
 import com.example.pinjambuku.network.LoginItem
 import com.example.pinjambuku.network.LoginResponse
@@ -34,7 +35,7 @@ class BookRepository(
         try {
 //            val response = apiService.getNews(BuildConfig.API_KEY)
             val response = apiService.getAllBooks()
-            result = ResultNetwork.Success(response.listEvents)
+            result = ResultNetwork.Success(response.listBooks)
         } catch (e: Exception) {
             result = ResultNetwork.Error(e.message.toString())
         }
@@ -47,7 +48,20 @@ class BookRepository(
         try {
 //            val response = apiService.getNews(BuildConfig.API_KEY)
             val response = apiService.searchBooks(keyword)
-            result = ResultNetwork.Success(response.listEvents)
+            result = ResultNetwork.Success(response.listBooks)
+        } catch (e: Exception) {
+            result = ResultNetwork.Error(e.message.toString())
+        }
+
+        return result
+    }
+
+    suspend fun listBorrowBooks(keyword : String): ResultNetwork<BooksResponse> {
+        var result: ResultNetwork<BooksResponse> = ResultNetwork.Loading
+        try {
+//            val response = apiService.getNews(BuildConfig.API_KEY)
+            val response = apiService.listBorrowBook(keyword)
+            result = ResultNetwork.Success(response)
         } catch (e: Exception) {
             result = ResultNetwork.Error(e.message.toString())
         }

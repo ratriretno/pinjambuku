@@ -114,7 +114,11 @@ fun PinjamBukuApp(
             ) {
                 val book = navController.previousBackStackEntry?.savedStateHandle?.get<BookModel>("book")
                 if (book != null) {
-                    DetailScreen(navigateBack = { navController.popBackStack() }, book = book)
+                    DetailScreen(
+                        navigateBack = { navController.popBackStack() },
+                        book = book,
+                        login= isLogin,
+                        idUser = idUser)
                 }
 
             }

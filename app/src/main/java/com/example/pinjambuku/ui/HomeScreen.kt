@@ -168,7 +168,7 @@ fun ScrollItemHome(
 }
 
 @Composable
-fun BigCircularLoading() {
+private fun BigCircularLoading() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -229,6 +229,7 @@ fun BookListItem(
             .padding(10.dp)
             .wrapContentSize()
             .alpha(0.5f) // mengindikasikan jika disabled
+            .clickable { onClick()}
     }
 
     Card(

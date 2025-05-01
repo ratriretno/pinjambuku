@@ -1,7 +1,9 @@
 package com.example.pinjambuku.ui
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,14 +38,21 @@ import androidx.compose.ui.unit.dp
 //import androidx.navigation.NavHostController
 //import com.example.myghibli.ui.theme.MyGhibliTheme
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -53,42 +62,95 @@ import com.example.pinjambuku.R
 import com.example.pinjambuku.di.ViewModelFactory
 import com.example.pinjambuku.model.BookModel
 import com.example.pinjambuku.network.Constant.dataStore
+import com.example.pinjambuku.network.ResultNetwork
+import com.example.pinjambuku.ui.screen.DetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
+    login : Boolean,
+    idUser : String,
     book: BookModel,
     navigateBack: () -> Unit,
-    viewModel: BookViewModel = viewModel(factory = LocalContext.current.let {
+    viewModel: DetailViewModel = viewModel(factory = LocalContext.current.let {
         ViewModelFactory.getInstance(
             LocalContext.current,
             it.dataStore
         )
     }),
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
 
-) {        //navController: NavHostController
+    ) {        //navController: NavHostController
 
     //var isBorrowed by remember { mutableStateOf(false) }
 
     val isBorrowed by viewModel.isBorrowed
     val context = LocalContext.current
 
+    val isLoading by viewModel.isLoading.collectAsState()//to check
+    val books by viewModel.book.collectAsState()//to check
+
+    viewModel.setBook(book)
+
+    var enabled by remember { mutableStateOf(book.available) }
+
+    Log.i("enable", enabled.toString())
+    Log.i("available", books.available.toString())
+    Log.i("book", book.available.toString())
 
 
+    viewModel.result.observe(lifecycleOwner) { result ->
+        if (result != null) {
+            when (result) {
+                is ResultNetwork.Loading -> {
+                    viewModel.setLoading(true)
+                    Log.i("login update?", isLoading.toString())
+                    enabled=false
+                }
 
+                is ResultNetwork.Success -> {
+                    viewModel.setLoading(false)
+                    enabled=false
+
+                    viewModel.updateBook()
+
+                    Log.i("enable", books.available.toString())
+
+                    Toast.makeText(
+                        context,
+                        result.data.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+//                    profile = result.data.profile
+
+                }
+
+                is ResultNetwork.Error -> {
+                    viewModel.setLoading(false)
+//                    enabled=true
+//                    binding.progressBar2.visibility = View.GONE
+                    Toast.makeText(
+                        context,
+                        "Terjadi kesalahan" + result.error,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
 
 
     //val movie = viewModel.selectedMovie
 
 
+    //var isFavorite by remember { mutableStateOf(false) }
 
-        //var isFavorite by remember { mutableStateOf(false) }
+    val isFavorite by viewModel.isFavorite          // Observe favorite state
 
-        val isFavorite by viewModel.isFavorite          // Observe favorite state
-
-        //LaunchedEffect(movie?.id) {
-        //    movie?.id?.let { viewModel.checkIfFavorite(it.toString()) }
-        //}
+    //LaunchedEffect(movie?.id) {
+    //    movie?.id?.let { viewModel.checkIfFavorite(it.toString()) }
+    //}
 
 //        LaunchedEffect(book?.idBuku) {
 //            book?.idBuku?.let {
@@ -97,69 +159,90 @@ fun DetailScreen(
 //            }
 //        }
 
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = { Text(text = "Detail Buku") },
-                    navigationIcon = {
-                        IconButton(onClick = navigateBack) {                        //navController.popBackStack()
-                            Row (verticalAlignment = Alignment.CenterVertically){
-                                Icon(
-                                    imageVector = Icons.Default.ArrowBack,
-                                    contentDescription = "Back"
-                                )
-                                Spacer(modifier = Modifier.width(10.dp))
-                                //Text(text = "Back")
-                            }
-
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text(text = "Detail Buku") },
+                navigationIcon = {
+                    IconButton(onClick = navigateBack) {                        //navController.popBackStack()
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            //Text(text = "Back")
                         }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = colorResource(R.color.hijau),
-                        titleContentColor = Color.White,
-                        navigationIconContentColor = Color.White
-                    )
+
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(R.color.hijau),
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
                 )
-            },
-            bottomBar = {
+            )
+        },
+        bottomBar = {
                 Button(
                     onClick = {
-                        viewModel.toggleBorrowed()
-                        //isBorrowed = !isBorrowed  // Toggle state on click
-                        Toast.makeText(context, if (isBorrowed) "Buku dikembalikan!" else "Buku dipinjam!", Toast.LENGTH_SHORT).show()
+                        if (login){
+                            books.id?.let { it1 -> books.name?.let { it2 ->
+                                viewModel.borrowBook(it1, idUser.toString(),
+                                    it2
+                                )
+                            } }
+                        } else {
+                            Toast.makeText(context,  "Untuk meminjam buku harus login terlebih dahulu", Toast.LENGTH_SHORT).show()
+                        }
+
+                        //                        viewModel.toggleBorrowed()
+                        //                        //isBorrowed = !isBorrowed  // Toggle state on click
+                        //
                     },
+                    enabled = enabled,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(80.dp)
                         .padding(16.dp),
-                    colors= ButtonDefaults.buttonColors(
-                        containerColor = if (isBorrowed) colorResource(id = R.color.purple_500) else colorResource(id = R.color.hijau_muda) )
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isBorrowed) colorResource(id = R.color.purple_500) else colorResource(
+                            id = R.color.hijau_muda
+                        )
+                    )
                 ) {
                     Text(text = if (isBorrowed) "Kembalikan Buku" else "Pinjam Buku")
                 }
-            }
+        }
 
 
-            ) { innerPadding ->
+    ) { innerPadding ->
 
-            Column() {
+        if (isLoading) {
+            BigCircularLoadingLogin()
+        } else {
 
-                Box(modifier = Modifier
+        Column() {
+
+            Box(
+                modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)) {
+                    .padding(innerPadding)
+            ) {
 
-                    //Main content
-                    LazyColumn(
-                        modifier = Modifier
-                            //.padding(innerPadding)
-                            .fillMaxSize()
-                            //.background(SkyBlue)
-                            .padding(16.dp)
+                //Main content
+                LazyColumn(
+                    modifier = Modifier
+                        //.padding(innerPadding)
+                        .fillMaxSize()
+                        //.background(SkyBlue)
+                        .padding(16.dp)
 
-                    ) {
-                        item{
+                ) {
 
-                            BookImageDetail(book)
+                    item {
+
+                        BookImageDetail(books)
 
 //                                Image(
 //                                    painter = painterResource(book.image),     //painterResource(movie.image)
@@ -173,77 +256,79 @@ fun DetailScreen(
 //                                            bottomEnd = 24.dp,
 //                                            bottomStart = 0.dp)))
 
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-                        item {
-                            Box(modifier = Modifier
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                    item {
+                        Box(
+                            modifier = Modifier
                                 //.background(Color.Yellow)
                                 .fillMaxWidth()
-                                //.padding(16.dp)
-                                //.clip(RoundedCornerShape(30.dp))
+                            //.padding(16.dp)
+                            //.clip(RoundedCornerShape(30.dp))
 
 
-                            ){
-                                Text(text = "${book.name}", style = MaterialTheme.typography.titleLarge)
-                                Spacer(modifier = Modifier.height(8.dp))
-                            }
-
-                        }
-                        item {
-                            Text(text = "Penulis : ${book.writer}",style = MaterialTheme.typography.titleMedium)
+                        ) {
+                            Text(text = "${books.name}", style = MaterialTheme.typography.titleLarge)
                             Spacer(modifier = Modifier.height(8.dp))
                         }
-                        item {
-                            Text(text = "Tahun : ${book.year}")
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
-/*
-                        item {
-                            if (book != null) {
-                                Text(text = "Penerbit : ${book.penerbit}")
-                            }
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
-
- */
-
-                        item {
-                            Text(text = "Deskripsi Buku",style = MaterialTheme.typography.bodyLarge )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(text = "${book.description}", style = MaterialTheme.typography.bodyMedium)
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-
 
                     }
-                    FloatingActionButton(
-                        onClick = {
-                            viewModel.toggleFavorite()
-                        },
-                        containerColor = Color(0xFFFFFFFF),
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = 16.dp)
-                    ) {
-                        Icon(
-                            imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = if (isFavorite) "Unfavorite" else "Favorite",
-                            tint = Color(0xFFF540B2)
+                    item {
+                        Text(
+                            text = "Penulis : ${books.writer}",
+                            style = MaterialTheme.typography.titleMedium
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    item {
+                        Text(text = "Tahun : ${books.year}")
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    /*
+                                            item {
+                                                if (book != null) {
+                                                    Text(text = "Penerbit : ${book.penerbit}")
+                                                }
+                                                Spacer(modifier = Modifier.height(8.dp))
+                                            }
+
+                     */
+
+                    item {
+                        Text(text = "Deskripsi Buku", style = MaterialTheme.typography.bodyLarge)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "${books.description}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
 
 
                 }
-
-
             }
-
-
+            FloatingActionButton(
+                onClick = {
+//                            viewModel.toggleFavorite()
+                },
+                containerColor = Color(0xFFFFFFFF),
+                modifier = Modifier
+//                    .align(Alignment.CenterEnd)
+                    .padding(end = 16.dp)
+            ) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = if (isFavorite) "Unfavorite" else "Favorite",
+                    tint = Color(0xFFF540B2)
+                )
+            }
         }
+    }
+    }
 }
 
 @Composable
-fun BookImageDetail(book: BookModel){
+fun BookImageDetail(book: BookModel) {
     Box(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center // Align to top-left
@@ -260,7 +345,20 @@ fun BookImageDetail(book: BookModel){
 }
 
 
-
+@Composable
+fun BigCircularLoadingDetail() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.width(64.dp),
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
+    }
+}
 //@Preview(showBackground = true)
 //@Composable
 //fun DetailScreenPreview(){

@@ -10,6 +10,7 @@ import com.example.pinjambuku.database.FavoriteBookDao
 import com.example.pinjambuku.database.FavoriteBookEntity
 import com.example.pinjambuku.model.BookModel
 import com.example.pinjambuku.network.ApiService
+import com.example.pinjambuku.network.BorrowResponse
 import com.example.pinjambuku.network.LoginItem
 import com.example.pinjambuku.network.LoginResponse
 import com.example.pinjambuku.network.ProfileResponse
@@ -78,6 +79,20 @@ class BookRepository(
         } catch (e: Exception) {
             result = ResultNetwork.Error(e.message.toString())
             Log.i("login", e.message.toString())
+        }
+
+        return result
+    }
+
+    suspend fun borrow(idBook: String, idUser : String, bookName : String): ResultNetwork<BorrowResponse> {
+        var result: ResultNetwork<BorrowResponse> = ResultNetwork.Loading
+        try {
+//            val response = apiService.getNews(BuildConfig.API_KEY)
+            val response = apiService.borrowBook(idBook, idUser, bookName)
+            result = ResultNetwork.Success(response)
+        } catch (e: Exception) {
+            result = ResultNetwork.Error(e.message.toString())
+            Log.i("borrow", e.message.toString())
         }
 
         return result

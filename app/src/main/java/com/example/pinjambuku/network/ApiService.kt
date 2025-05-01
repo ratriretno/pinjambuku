@@ -35,5 +35,8 @@ interface ApiService {
     @POST("getProfile.php")
     suspend fun profile(@Field("idUser") id : String) : ProfileResponse
 
-
+    @FormUrlEncoded
+    @POST("borrowBook.php")
+    suspend fun borrowBook(@Field("idBuku") idBook: String, @Field("idUser") idUser : String,
+                           @Field("name") bookName : String): BorrowResponse
 }

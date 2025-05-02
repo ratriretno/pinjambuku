@@ -1,9 +1,8 @@
-package com.example.pinjambuku.ui
+package com.example.pinjambuku.ui.screen
 
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.AccessAlarm
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
@@ -54,7 +52,6 @@ import com.example.pinjambuku.di.ViewModelFactory
 import com.example.pinjambuku.model.BookModel
 import com.example.pinjambuku.network.Constant.dataStore
 import com.example.pinjambuku.network.ResultNetwork
-import com.example.pinjambuku.ui.screen.BorrowBookViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +72,7 @@ fun BorrowedBookScreen(
     val books = viewModel.bookList.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    viewModel.result.observe(lifecycleOwner) { result ->
+    viewModel.resultBorrow.observe(lifecycleOwner) { result ->
         if (result != null) {
             when (result) {
                 is ResultNetwork.Loading -> {
@@ -232,13 +229,13 @@ fun BookListItemBorrow(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 4.dp, start = 10.dp)
-                        .background(
-                            if (!book.endDate.isNullOrEmpty()){
-                                Color(0xB24CAF50)
-                            } else{
-                                Color(0xA3CDDC39)
-                            }
-                           , shape = RoundedCornerShape(8.dp))
+//                        .background(
+////                            if (!book.endDate.isNullOrEmpty()){
+//                                Color(0xB2E7EEE8)
+////                            } else{
+////                                Color(0xA3CDDC39)
+////                            }
+//                           , shape = RoundedCornerShape(8.dp))
 
 
                         .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -248,12 +245,19 @@ fun BookListItemBorrow(
                 if (!book.endDate.isNullOrEmpty()){
                     Log.i("end", book.endDate)
                     Log.i("end", book.name.toString())
-                    textNotice = "Selesei"
+                    textNotice = "Dikembalikan"
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = "Borrowed Icon",
-                        tint = Color.White,
-                        modifier = Modifier.size(18.dp)
+                        tint = Color.Gray,
+                        modifier = Modifier.size(25.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = textNotice,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp
                     )
 
                 } else{
@@ -261,19 +265,20 @@ fun BookListItemBorrow(
                     Icon(
                         imageVector = Icons.Default.AccessAlarm,
                         contentDescription = "Borrowed Icon",
-                        tint = Color.White,
-                        modifier = Modifier.size(18.dp)
+                        tint = Color.Gray,
+                        modifier = Modifier.size(25.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = textNotice,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp
                     )
                 }
 
 
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = textNotice,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
+
                 }
 
 

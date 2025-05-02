@@ -1,4 +1,4 @@
-package com.example.pinjambuku.ui
+package com.example.pinjambuku.ui.screen
 
 import android.util.Log
 import android.widget.Toast
@@ -55,7 +55,6 @@ import com.example.pinjambuku.di.ViewModelFactory
 import com.example.pinjambuku.model.BookModel
 import com.example.pinjambuku.network.Constant.dataStore
 import com.example.pinjambuku.network.ResultNetwork
-import com.example.pinjambuku.ui.screen.DetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

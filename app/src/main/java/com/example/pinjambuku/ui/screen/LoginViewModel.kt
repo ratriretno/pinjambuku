@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pinjambuku.model.BookModel
-import com.example.pinjambuku.network.LoginItem
-import com.example.pinjambuku.network.LoginResponse
+import com.example.pinjambuku.model.LoginItem
+import com.example.pinjambuku.model.LoginResponse
 import com.example.pinjambuku.network.ResultNetwork
 import com.example.pinjambuku.repository.BookRepository
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,4 +1,4 @@
-package com.example.pinjambuku.ui
+package com.example.pinjambuku.ui.screen
 
 import android.util.Log
 import android.widget.Toast
@@ -22,11 +22,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -50,16 +48,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.pinjambuku.R
 import com.example.pinjambuku.di.ViewModelFactory
 import com.example.pinjambuku.network.Constant.dataStore
 import com.example.pinjambuku.network.ResultNetwork
-import com.example.pinjambuku.ui.screen.ProfileViewModel
-import com.example.pinjambuku.ui.screen.SignupViewModel
-import androidx.compose.ui.platform.LocalContext
-import com.example.pinjambuku.network.ProfileItem
-import com.example.pinjambuku.network.SignupItem
+import com.example.pinjambuku.model.ProfileItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,12 +1,13 @@
 package com.example.pinjambuku.network
 
-import retrofit2.http.Body
+import com.example.pinjambuku.model.BooksResponse
+import com.example.pinjambuku.model.BorrowResponse
+import com.example.pinjambuku.model.LoginResponse
+import com.example.pinjambuku.model.ProfileResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Part
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {

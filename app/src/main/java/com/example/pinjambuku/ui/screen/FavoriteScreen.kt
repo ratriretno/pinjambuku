@@ -1,4 +1,4 @@
-package com.example.pinjambuku.ui
+package com.example.pinjambuku.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -43,14 +42,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.pinjambuku.BookViewModel
 import com.example.pinjambuku.R
 import com.example.pinjambuku.di.ViewModelFactory
 import com.example.pinjambuku.model.ExampleBook
-import com.example.pinjambuku.model.FavoriteBook
 import com.example.pinjambuku.network.Constant.dataStore
 
 @OptIn(ExperimentalMaterial3Api::class)

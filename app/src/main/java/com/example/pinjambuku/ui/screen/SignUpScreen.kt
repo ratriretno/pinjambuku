@@ -1,9 +1,7 @@
-package com.example.pinjambuku.ui
+package com.example.pinjambuku.ui.screen
 
 import android.util.Log
-import android.util.Patterns
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,11 +42,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -64,11 +60,8 @@ import com.example.pinjambuku.R
 import com.example.pinjambuku.di.ViewModelFactory
 import com.example.pinjambuku.network.Constant.dataStore
 import com.example.pinjambuku.network.ResultNetwork
-import com.example.pinjambuku.network.SignupItem
-import com.example.pinjambuku.ui.screen.LoginViewModel
-import com.example.pinjambuku.ui.screen.SignupViewModel
+import com.example.pinjambuku.model.SignupItem
 import com.example.pinjambuku.ui.theme.PinjamBukuTheme
-import kotlin.math.sign
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -425,7 +418,8 @@ fun SignUp(
                                         fullname = signUpNameValue,
                                         username = signUpUserNameValue,
                                         city = signupCityValue
-                                        ))
+                                        )
+                                    )
                                 }
 
                             },

@@ -1,6 +1,5 @@
-package com.example.pinjambuku.network
+package com.example.pinjambuku.model
 
-import com.example.pinjambuku.model.BookModel
 import com.google.gson.annotations.SerializedName
 
 data class ProfileResponse (

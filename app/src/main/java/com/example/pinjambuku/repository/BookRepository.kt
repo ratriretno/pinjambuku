@@ -10,14 +10,14 @@ import com.example.pinjambuku.database.FavoriteBookDao
 import com.example.pinjambuku.database.FavoriteBookEntity
 import com.example.pinjambuku.model.BookModel
 import com.example.pinjambuku.network.ApiService
-import com.example.pinjambuku.network.BooksResponse
-import com.example.pinjambuku.network.BorrowResponse
-import com.example.pinjambuku.network.LoginItem
-import com.example.pinjambuku.network.LoginResponse
-import com.example.pinjambuku.network.ProfileResponse
+import com.example.pinjambuku.model.BooksResponse
+import com.example.pinjambuku.model.BorrowResponse
+import com.example.pinjambuku.model.LoginItem
+import com.example.pinjambuku.model.LoginResponse
+import com.example.pinjambuku.model.ProfileResponse
 import com.example.pinjambuku.utils.AppExecutors
 import com.example.pinjambuku.network.ResultNetwork
-import com.example.pinjambuku.network.SignupItem
+import com.example.pinjambuku.model.SignupItem
 
 class BookRepository(
     private val apiService: ApiService,

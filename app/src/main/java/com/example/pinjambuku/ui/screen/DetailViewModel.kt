@@ -7,8 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pinjambuku.model.BookModel
-import com.example.pinjambuku.network.BorrowResponse
-import com.example.pinjambuku.network.ProfileResponse
+import com.example.pinjambuku.model.BorrowResponse
 import com.example.pinjambuku.network.ResultNetwork
 import com.example.pinjambuku.repository.BookRepository
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,12 +1,11 @@
 package com.example.pinjambuku.ui.screen
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pinjambuku.model.BookModel
-import com.example.pinjambuku.network.BooksResponse
+import com.example.pinjambuku.model.BooksResponse
 import com.example.pinjambuku.network.ResultNetwork
 import com.example.pinjambuku.repository.BookRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +14,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class BorrowBookViewModel (private val repository: BookRepository) : ViewModel() {
-    private val _result = MutableLiveData<ResultNetwork<BooksResponse>>()
-    val result: LiveData<ResultNetwork<BooksResponse>> = _result
+    private val _resultBorrow = MutableLiveData<ResultNetwork<BooksResponse>>()
+    val resultBorrow: LiveData<ResultNetwork<BooksResponse>> = _resultBorrow
 
     private val _books = MutableStateFlow<MutableList<BookModel>>(mutableListOf())
     val bookList: StateFlow<List<BookModel>>
@@ -36,7 +35,7 @@ class BorrowBookViewModel (private val repository: BookRepository) : ViewModel()
   fun listBorrowBook(idUser : String) {
         _isLoading.value = true
         viewModelScope.launch {
-            _result.value = repository.listBorrowBooks(idUser)
+            _resultBorrow.value = repository.listBorrowBooks(idUser)
         }
     }
 

@@ -1,7 +1,7 @@
 Berikut beberapa cara penggunaan proyek pinjambuku :
 
 - Dependency Injection Manual
-     -  com/example/pinjambuku/di/
+          -  com/example/pinjambuku/di/
            -  Injection.kt
            -   ViewModelFactory.kt
 
@@ -14,3 +14,29 @@ Berikut beberapa cara penggunaan proyek pinjambuku :
             LoginViewModel.kt
 
                     class LoginViewModel(private val repository: BookRepository) : ViewModel() {
+
+  Cara memanggil viewmodel pada screen
+
+
+               fun LoginScreen(
+                   navigateBack: () -> Unit,
+                   signUp:()-> Unit,
+                   viewModel: LoginViewModel = viewModel(factory = LocalContext.current.let {
+                       ViewModelFactory.getInstance(
+                           LocalContext.current,
+                           it.dataStore
+                       )
+                   }),
+                   goToProfile: (String) -> Unit,
+                   lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+               ) {
+  - Networking dengan retrofit
+               - com/example/pinjambuku/network/
+                   - ApiConfig.kt
+                   - ApiService.kt
+
+   - File Api ada pada https://github.com/ratriretno/api-pinjam-buku
+ 
+   - Base url : https://pinjambuku.solfagaming.com
+   - Contoh penggunaan api : https://ratriretnowati.postman.co/workspace/Ratri-Retnowati's-Workspace~c9967c4f-5f0d-45fe-88aa-8ec67284e69f/collection/44025365-0a99fa39-af65-470f-a4bd-963825f9d746?action=share&creator=44025365
+    

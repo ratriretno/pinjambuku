@@ -416,31 +416,55 @@ fun BottomBar(
             Screen.Login
         }
 
-        val navigationItems = listOf(
-            BottomBarItem(title = stringResource(R.string.menu_home),
-                icon = Icons.Default.Home,
-                screen = Screen.Home
+        val navigationItems =
+            if (login){
+                listOf(
+                    BottomBarItem(title = stringResource(R.string.menu_home),
+                        icon = Icons.Default.Home,
+                        screen = Screen.Home
 
-            ),
-/*            BottomBarItem(title = stringResource(R.string.menu_favorite),
-                icon = Icons.Default.Favorite,
-                screen = Screen.Favorite
-            ),
+                    ),
+                    /*            BottomBarItem(title = stringResource(R.string.menu_favorite),
+                                    icon = Icons.Default.Favorite,
+                                    screen = Screen.Favorite
+                                ),
 
- */
-            BottomBarItem(title = stringResource(R.string.daftar_peminjaman),
-                icon = Icons.Default.Book,
-                screen = Screen.BorrowedBook
-            ),
-            BottomBarItem(title = stringResource(R.string.menu_favorite),
-                icon = Icons.Default.Favorite,
-                screen = Screen.Favorite
-            ),
-            BottomBarItem(title = stringResource(R.string.menu_profile),
-                icon = Icons.Default.AccountCircle,
-                screen = profileScreen
-            )
-        )
+                     */
+                    BottomBarItem(title = stringResource(R.string.daftar_peminjaman),
+                        icon = Icons.Default.Book,
+                        screen = Screen.BorrowedBook
+                    ),
+//            BottomBarItem(title = stringResource(R.string.menu_favorite),
+//                icon = Icons.Default.Favorite,
+//                screen = Screen.Favorite
+//            ),
+                    BottomBarItem(title = stringResource(R.string.menu_profile),
+                        icon = Icons.Default.AccountCircle,
+                        screen = profileScreen
+                    ))
+            } else{
+                listOf(
+                    BottomBarItem(title = stringResource(R.string.menu_home),
+                        icon = Icons.Default.Home,
+                        screen = Screen.Home
+
+                    ),
+                    /*            BottomBarItem(title = stringResource(R.string.menu_favorite),
+                                    icon = Icons.Default.Favorite,
+                                    screen = Screen.Favorite
+                                ),
+
+                     */
+//            BottomBarItem(title = stringResource(R.string.menu_favorite),
+//                icon = Icons.Default.Favorite,
+//                screen = Screen.Favorite
+//            ),
+                    BottomBarItem(title = stringResource(R.string.menu_profile),
+                        icon = Icons.Default.AccountCircle,
+                        screen = profileScreen
+                    ))
+            }
+
         navigationItems.map { item ->
             NavigationBarItem(
                 modifier = Modifier.testTag(item.title),

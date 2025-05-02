@@ -108,13 +108,18 @@ fun LoginScreen(
                     viewModel.setLoading(false)
 
                     Log.i("login update id?", result.data.idUser)
-                    Toast.makeText(
-                        context,
-                        result.data.idUser,
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                     viewModel.setLoginSetting(result.data)
-                    goToProfile(result.data.idUser)
+                    if (result.data.login){
+                        goToProfile(result.data.idUser)
+                    } else{
+                        Toast.makeText(
+                            context,
+                            result.data.message,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
                 }
 
                 is ResultNetwork.Error -> {

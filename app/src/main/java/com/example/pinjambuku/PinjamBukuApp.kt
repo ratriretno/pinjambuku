@@ -58,12 +58,12 @@ fun PinjamBukuApp(
     val idUser by viewModel.userId.collectAsState()
 
     // daftar route BottomBar
-    val showBottomBarRoutes = listOf(
-        Screen.Home.route,
-        Screen.Favorite.route,
-        Screen.BorrowedBook.route,
-        Screen.Profile.route
-    )
+    val showBottomBarRoutes =
+            listOf(
+            Screen.Home.route,
+//            Screen.Favorite.route,
+            Screen.BorrowedBook.route,
+            Screen.Profile.route)
 
     viewModel.getLogin().observe(lifecycleOwner) { login: Boolean ->
             viewModel.setLogin(login)
@@ -120,7 +120,8 @@ fun PinjamBukuApp(
                         login= isLogin,
                         idUser = idUser,
                         navigateToBorrow={navController.clearBackStack(BookDestinations.DETAIL_ROUTE)
-                            navActions.navigateToBorrow()}
+                            navActions.navigateToBorrow()},
+                        navigateToLogin = {navActions.navigateToLogin()}
                     )
                 }
 

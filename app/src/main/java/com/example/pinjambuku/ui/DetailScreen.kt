@@ -72,6 +72,7 @@ fun DetailScreen(
     }),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     navigateToBorrow: () -> Unit,
+    navigateToLogin: () -> Unit,
 
     ) {        //navController: NavHostController
 
@@ -206,6 +207,8 @@ fun DetailScreen(
                             "Untuk meminjam buku harus login terlebih dahulu",
                             Toast.LENGTH_SHORT
                         ).show()
+
+                        navigateToLogin()
                     }
 
 

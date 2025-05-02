@@ -172,9 +172,7 @@ fun PinjamBukuApp(
                     goToProfile = { navActions.navigateToProfile(idUser) }
                 )
             }
-//            composable(Screen.Detail.route) {
-//                DetailScreen(navController = navController)
-//            }
+
 
         }
 

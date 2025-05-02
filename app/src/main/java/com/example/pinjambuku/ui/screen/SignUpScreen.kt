@@ -170,7 +170,7 @@ fun SignUp(
                 .height(100.dp)
                 .padding(10.dp)
                 .background(colorResource(id = R.color.orange),shape = RoundedCornerShape(20.dp)),
-                //.padding(innerPadding),
+
 
                 contentAlignment = Alignment.Center
             ){
@@ -183,7 +183,7 @@ fun SignUp(
             Box(modifier = Modifier
                 .fillMaxWidth(),
 
-                //.padding(innerPadding),
+
                 contentAlignment = Alignment.Center,
 
 
@@ -196,11 +196,9 @@ fun SignUp(
                     LazyColumn (
                         modifier = Modifier
                             .fillMaxSize()
-                            //.verticalScroll(scrollState)
-                            //.padding(16.dp)
+
                             .imePadding(),
-                        //.windowInsetsPadding(WindowInsets.ime)
-                        //.navigationBarsWithImePadding(),
+
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(15.dp),
                         contentPadding = PaddingValues(bottom = 100.dp)
@@ -208,12 +206,12 @@ fun SignUp(
 
                         item{
                             Text(modifier = Modifier
-                                //.fillMaxWidth()
+
                                 .width(250.dp),
-                                //align(Alignment.CenterEnd)
+
                                 text = stringResource(R.string.signup_username_title),
                                 fontWeight = FontWeight.Bold,
-                                //modifier = Modifier.padding(bottom = 5.dp)
+
                             )
 
                             OutlinedTextField(value = signUpUserNameValue, onValueChange = {signUpUserNameValue = it}, label = { Text(
@@ -229,12 +227,12 @@ fun SignUp(
 
                         item{
                             Text(modifier = Modifier
-                                //.fillMaxWidth()
+
                                 .width(250.dp),
-                                //align(Alignment.CenterEnd)
+
                                 text = stringResource(R.string.signup_fullname_title),
                                 fontWeight = FontWeight.Bold,
-                                //modifier = Modifier.padding(bottom = 5.dp)
+
                             )
 
                             OutlinedTextField(value = signUpNameValue, onValueChange = {signUpNameValue = it}, label = { Text(
@@ -288,12 +286,12 @@ fun SignUp(
 
                         item{
                             Text(modifier = Modifier
-                                //.fillMaxWidth()
+
                                 .width(250.dp),
-                                //align(Alignment.CenterEnd)
+
                                 text = stringResource(R.string.signup_password),
                                 fontWeight = FontWeight.Bold
-                                //modifier = Modifier.padding(bottom = 5.dp)
+
                             )
 
                             OutlinedTextField(value = signupPasswordValue, onValueChange = {signupPasswordValue = it}, label = { Text(
@@ -322,12 +320,12 @@ fun SignUp(
 
                         item{
                             Text(modifier = Modifier
-                                //.fillMaxWidth()
+
                                 .width(250.dp),
-                                //align(Alignment.CenterEnd)
+
                                 text = stringResource(R.string.signup_confirm__password),
                                 fontWeight = FontWeight.Bold
-                                //modifier = Modifier.padding(bottom = 5.dp)
+
                             )
 
                             OutlinedTextField(value = confirmPasswordValue, onValueChange = {confirmPasswordValue = it}, label = { Text(
@@ -356,12 +354,12 @@ fun SignUp(
 
                         item{
                             Text(modifier = Modifier
-                                //.fillMaxWidth()
+
                                 .width(250.dp),
-                                //align(Alignment.CenterEnd)
+
                                 text = stringResource(R.string.signup_city),
                                 fontWeight = FontWeight.Bold
-                                //modifier = Modifier.padding(bottom = 5.dp)
+
                             )
 
 
@@ -403,14 +401,8 @@ fun SignUp(
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 } else {
-                                    // Proceed with sign-up logic (e.g. save data, navigate, etc.)
-                                    /*Toast.makeText(
-                                        context,
-                                        "Account created successfully!",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
 
-                                     */
+
                                     viewModel.signup(item =
                                     SignupItem(
                                         email = signUpEmailValue,
@@ -447,16 +439,7 @@ fun SignUp(
 
 }
 
-/*
-@Composable
-fun Banner(modifier: Modifier = Modifier){
-    Box(){
-        Image(painter = painterResource(R.drawable.gambar), contentDescription = "coba",contentScale = ContentScale.Crop, modifier = Modifier.height(100.dp))
-    }
 
-}
-
- */
 
 @Composable
 fun BigCircularLoadingSignUp() {
@@ -479,7 +462,7 @@ fun BigCircularLoadingSignUp() {
 fun SignUpPreview(){
     PinjamBukuTheme {
 
-//        SignUp()
+
 
     }
 }

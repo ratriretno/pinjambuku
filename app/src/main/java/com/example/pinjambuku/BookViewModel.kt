@@ -76,10 +76,7 @@ class BookViewModel (private val repository: BookRepository):  ViewModel(){
         list.map { it.idBuku }.toSet()
     }
 
-/*
-    // existing movie list
-    var selectedMovie: Movie? by mutableStateOf(null)
-*/
+
     // existing book list
     var selectedBook: ExampleBook? by mutableStateOf(null)
 
@@ -90,7 +87,7 @@ class BookViewModel (private val repository: BookRepository):  ViewModel(){
         private set
 
 
-//    private val _movies = MoviesData.movies                 // membaca semua object di "MoviesData"
+
     private  val _book = ExampleBookData.books              // membaca semua object di "ExampleBookData"
 
 
@@ -195,18 +192,7 @@ class BookViewModel (private val repository: BookRepository):  ViewModel(){
         isBorrowed.value = value
     }
 
-/*
-    // Filtered movie list based on search
-    val filteredMovies: List<ExampleBook>
-        get() = if (searchQuery.isBlank()) {
-            _movies
-        } else {
-            _movies.filter {
-                it.title.contains(searchQuery, ignoreCase = true) ||
-                        it.year.contains(searchQuery, ignoreCase = true)
-            }
-        }
-*/
+
 
     // Filtered book list based on search
     val filteredBook: List<ExampleBook>

@@ -49,7 +49,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-//import com.example.myghibli.ui.theme.SkyBlue
+
 import com.example.pinjambuku.R
 import com.example.pinjambuku.di.ViewModelFactory
 import com.example.pinjambuku.model.BookModel
@@ -73,9 +73,7 @@ fun DetailScreen(
     navigateToBorrow: () -> Unit,
     navigateToLogin: () -> Unit,
 
-    ) {        //navController: NavHostController
-
-    //var isBorrowed by remember { mutableStateOf(false) }
+    ) {
 
     val isBorrowed by viewModel.isBorrowed
     val context = LocalContext.current
@@ -118,11 +116,7 @@ fun DetailScreen(
 
                 is ResultNetwork.Success -> {
                     viewModel.setLoading(false)
-//                    enabled=false
-//
-//                    viewModel.updateBook(idUser)
-//
-//                    Log.i("enable", books.available.toString())
+
 
                     Toast.makeText(
                         context,
@@ -131,14 +125,13 @@ fun DetailScreen(
                     ).show()
 
                     navigateToBorrow()
-//                    profile = result.data.profile
+
 
                 }
 
                 is ResultNetwork.Error -> {
                     viewModel.setLoading(false)
-//                    enabled=true
-//                    binding.progressBar2.visibility = View.GONE
+
                     Toast.makeText(
                         context,
                         "Terjadi kesalahan" + result.error,
@@ -150,23 +143,11 @@ fun DetailScreen(
     }
 
 
-    //val movie = viewModel.selectedMovie
 
-
-    //var isFavorite by remember { mutableStateOf(false) }
 
     val isFavorite by viewModel.isFavorite          // Observe favorite state
 
-    //LaunchedEffect(movie?.id) {
-    //    movie?.id?.let { viewModel.checkIfFavorite(it.toString()) }
-    //}
 
-//        LaunchedEffect(book?.idBuku) {
-//            book?.idBuku?.let {
-//                viewModel.checkIfBorrowed(it.toString())
-//                viewModel.checkIfFavorite(it.toString())
-//            }
-//        }
 
 
     Scaffold(
@@ -211,9 +192,7 @@ fun DetailScreen(
                     }
 
 
-                    //                        viewModel.toggleBorrowed()
-                    //                        //isBorrowed = !isBorrowed  // Toggle state on click
-                    //
+
                 },
                 enabled = enabled,
                 modifier = Modifier
@@ -264,27 +243,15 @@ fun DetailScreen(
 
                             BookImageDetail(books)
 
-//                                Image(
-//                                    painter = painterResource(book.image),     //painterResource(movie.image)
-//                                    contentDescription = book.judul,
-//                                    contentScale = ContentScale.Crop,
-//                                    modifier = Modifier
-//                                        .height(250.dp)
-//                                        .clip(RoundedCornerShape(
-//                                            topStart = 24.dp,
-//                                            topEnd = 0.dp,
-//                                            bottomEnd = 24.dp,
-//                                            bottomStart = 0.dp)))
 
                             Spacer(modifier = Modifier.height(16.dp))
                         }
                         item {
                             Box(
                                 modifier = Modifier
-                                    //.background(Color.Yellow)
+
                                     .fillMaxWidth()
-                                //.padding(16.dp)
-                                //.clip(RoundedCornerShape(30.dp))
+
 
 
                             ) {
@@ -385,10 +352,3 @@ fun BigCircularLoadingDetail() {
         )
     }
 }
-//@Preview(showBackground = true)
-//@Composable
-//fun DetailScreenPreview(){
-//    PinjamBukuTheme {
-//        DetailScreen(viewModel = BookViewModel(application = Application()), navController = rememberNavController())
-//    }
-//}

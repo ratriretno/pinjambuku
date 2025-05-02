@@ -92,11 +92,7 @@ fun ProfileScreen(
 
                     Log.i("login update?", isLoading.toString())
                     Log.i("login update?", result.data.toString())
-//                    Toast.makeText(
-//                        context,
-//                        result.data.message,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
+
 
                     profile = result.data.profile
 
@@ -146,17 +142,7 @@ fun ProfileScreen(
             )
 
         },
-//        floatingActionButton = {
-//            FloatingActionButton(
-//                onClick = {},
-//                shape = CircleShape, containerColor = colorResource(id = R.color.hijau_muda)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.Edit,      //Icon
-//                    contentDescription = "Edit Button"
-//                )
-//            }
-//        }
+
 
     ) { innerPadding ->
         if (isLoading) {
@@ -229,10 +215,7 @@ fun ProfileScreen(
                             Spacer(modifier = Modifier.height(20.dp))
                             Text(text = profile.fullname)
                         }
-//                    item {
-//                        Spacer(modifier = Modifier.height(20.dp))
-//                        Text(text = "username : ratri")
-//                    }
+
                         item {
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(text = profile.email)
@@ -274,15 +257,3 @@ fun ProfileScreen(
     }
 }
 
-/*
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview(){
-    PinjamBukuTheme {
-
-        Profile()
-
-    }
-}
-
- */
